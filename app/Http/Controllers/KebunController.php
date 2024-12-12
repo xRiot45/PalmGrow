@@ -11,6 +11,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+use function PHPUnit\Framework\isEmpty;
+
 class KebunController extends Controller
 {
     private function applyFilters(Builder $query, Request $request): void
@@ -35,19 +37,19 @@ class KebunController extends Controller
     }
 
     /**
-     * FUngsi untuk menampilkan halaman kebun yang disertai dengan fitur pencarian dan pagination
+     * Fungsi untuk menampilkan halaman kebun yang disertai dengan fitur filter dan pagination
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request): View
     {
-        $perPage = $request->input('per_page', 100);
+        $perPage = $request->input('per_page', 10);
 
         $query = Kebun::query()->orderByDesc('created_at');
 
         $this->applyFilters($query, $request);
 
-        $kebun = $query->paginate($perPage);
+        $kebun = $query->paginate($perPage)->withQueryString();
 
         return view('pages.admin.kebun.index', [
             'data' => $kebun->items(),
@@ -71,18 +73,32 @@ class KebunController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $request->validate([
             'lokasi' => 'required|string',
             'luas' => 'required|integer',
-            'status' => ['required', Rule::in(array_column(StatusKebun::cases(), 'value'))],
-            'tanggal_tanam' => 'nullable',
-            'tanggal_panen' => 'nullable',
+            'status' => ['required', Rule::in(StatusKebun::values())],
+            'tanggal_tanam' => 'required',
+            'tanggal_panen' => 'required',
+        ], [
+            'lokasi.required' => 'Lokasi kebun harus diisi.',
+            'lokasi.string' => 'Lokasi kebun harus berupa teks.',
+            'luas.required' => 'Luas kebun harus diisi.',
+            'luas.integer' => 'Luas kebun harus berupa angka.',
+            'status.required' => 'Status kebun harus dipilih.',
+            'status.in' => 'Status kebun yang dipilih tidak valid.',
+            'tanggal_tanam.required' => 'Tanggal tanam harus diisi.',
+            'tanggal_panen.required' => 'Tanggal panen harus diisi.',
         ]);
 
-        $kebun = Kebun::create($validated);
-        $kebun->save();
+        Kebun::create($request->only([
+            'lokasi',
+            'luas',
+            'status',
+            'tanggal_tanam',
+            'tanggal_panen',
+        ]));
 
-        return redirect()->route('admin.kebun.index')->with('success', 'Berhasil menambahkan kebun');
+        return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil ditambahkan');
     }
 
     /**
