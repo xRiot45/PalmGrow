@@ -50,6 +50,7 @@
 
             <form action="{{ route('logout') }}" method="POST">
               @csrf
+              @method('DELETE')
               <button type="submit" class="dropdown-item text-danger">
                 <i class="bx bx-log-out fs-18 align-middle me-1"></i><span
                   class="align-middle">Logout</span>
