@@ -11,8 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-use function PHPUnit\Framework\isEmpty;
-
 class KebunController extends Controller
 {
     private function applyFilters(Builder $query, Request $request): void
@@ -109,9 +107,48 @@ class KebunController extends Controller
     public function edit($id): View
     {
         $kebun = Kebun::findOrFail($id);
+        // dd($kebun);
+
         return view('pages.admin.kebun.edit', [
             'data' => $kebun,
         ]);
+    }
+
+    /**
+     * SFungsi untuk mengupdate data kebun
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, $id): RedirectResponse
+    {
+        $request->validate([
+            'lokasi' => 'required|string',
+            'luas' => 'required|integer',
+            'status' => ['required', Rule::in(StatusKebun::values())],
+            'tanggal_tanam' => 'required',
+            'tanggal_panen' => 'required',
+        ], [
+            'lokasi.required' => 'Lokasi kebun harus diisi.',
+            'lokasi.string' => 'Lokasi kebun harus berupa teks.',
+            'luas.required' => 'Luas kebun harus diisi.',
+            'luas.integer' => 'Luas kebun harus berupa angka.',
+            'status.required' => 'Status kebun harus dipilih.',
+            'status.in' => 'Status kebun yang dipilih tidak valid.',
+            'tanggal_tanam.required' => 'Tanggal tanam harus diisi.',
+            'tanggal_panen.required' => 'Tanggal panen harus diisi.',
+        ]);
+
+        $kebun = Kebun::findOrFail($id);
+        $kebun->update($request->only([
+            'lokasi',
+            'luas',
+            'status',
+            'tanggal_tanam',
+            'tanggal_panen',
+        ]));
+
+        return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil diupdate');
     }
 
     /**

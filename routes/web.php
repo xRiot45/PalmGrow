@@ -39,6 +39,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::get('/tambah-kebun', [KebunController::class, 'create'])->name('admin.kebun.create');
         Route::post('/tambah-kebun', [KebunController::class, 'store'])->name('admin.kebun.store');
         Route::get('/edit-kebun/{id}', [KebunController::class, 'edit'])->name('admin.kebun.edit');
+        Route::put('/edit-kebun/{id}', [KebunController::class, 'update'])->name('admin.kebun.update');
         Route::delete('/{id}', [KebunController::class, 'destroy'])->name('admin.kebun.destroy');
     });
 
