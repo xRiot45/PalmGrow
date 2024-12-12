@@ -73,7 +73,7 @@ class PenggunaController extends Controller
         $pengguna = Pengguna::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($request->password),
+            'password' => Hash::make('password123'),
             'role' => $validated['role'],
         ]);
 
