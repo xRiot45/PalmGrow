@@ -45,6 +45,17 @@
       </li>
       {{-- Pengguna --}}
 
+      {{-- Kebun --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.kebun.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="maki:garden"></iconify-icon>
+          </span>
+          <span class="nav-text"> Kebun </span>
+        </a>
+      </li>
+      {{-- Kebun --}}
+
       <li class="nav-item">
         <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse"
           role="button" aria-expanded="false" aria-controls="sidebarProducts">

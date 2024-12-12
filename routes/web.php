@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KebunController;
 use App\Http\Controllers\PenggunaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingController;
@@ -23,12 +24,23 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
     // Pengguna Route
-    Route::get('/admin/pengguna', [PenggunaController::class, 'index'])->name('admin.pengguna.index');
-    Route::get('/admin/pengguna/tambah-pengguna', [PenggunaController::class, 'create'])->name('admin.pengguna.create');
-    Route::post('/admin/pengguna/tambah-pengguna', [PenggunaController::class, 'store'])->name('admin.pengguna.store');
-    Route::get('/admin/pengguna/edit-pengguna/{id}', [PenggunaController::class, 'edit'])->name('admin.pengguna.edit');
-    Route::put('/admin/pengguna/edit-pengguna/{id}', [PenggunaController::class, 'update'])->name('admin.pengguna.update');
-    Route::delete('/admin/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('admin.pengguna.destroy');
+    Route::prefix('/admin/pengguna')->group(function () {
+        Route::get('/', [PenggunaController::class, 'index'])->name('admin.pengguna.index');
+        Route::get('/tambah-pengguna', [PenggunaController::class, 'create'])->name('admin.pengguna.create');
+        Route::post('/tambah-pengguna', [PenggunaController::class, 'store'])->name('admin.pengguna.store');
+        Route::get('/edit-pengguna/{id}', [PenggunaController::class, 'edit'])->name('admin.pengguna.edit');
+        Route::put('/edit-pengguna/{id}', [PenggunaController::class, 'update'])->name('admin.pengguna.update');
+        Route::delete('/{id}', [PenggunaController::class, 'destroy'])->name('admin.pengguna.destroy');
+    });
+
+    // Kebun
+    Route::prefix('/admin/kebun')->group(function () {
+        Route::get('/', [KebunController::class, 'index'])->name('admin.kebun.index');
+        Route::get('/tambah-kebun', [KebunController::class, 'create'])->name('admin.kebun.create');
+        Route::post('/tambah-kebun', [KebunController::class, 'store'])->name('admin.kebun.store');
+        Route::get('/edit-kebun/{id}', [KebunController::class, 'edit'])->name('admin.kebun.edit');
+        Route::delete('/{id}', [KebunController::class, 'destroy'])->name('admin.kebun.destroy');
+    });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');
     Route::get('{first}/{second}/{third}', [RoutingController::class, 'thirdLevel'])->name('third');
