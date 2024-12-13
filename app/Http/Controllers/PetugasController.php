@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengguna;
 use App\Models\Petugas;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -12,7 +13,7 @@ use Illuminate\Http\Request;
 class PetugasController extends Controller
 {
     /**
-     * SFungsi untuk menerapkan fitur filter
+     * Fungsi untuk menerapkan fitur filter
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param \Illuminate\Http\Request $request
      * @return void
@@ -54,11 +55,15 @@ class PetugasController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Fungsi untuk menampilkan halaman tambah petugas dan mengirimkan data pengguna
+     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $pengguna = Pengguna::whereDoesntHave('petugas')->where('role', 'Petugas Kebun')->get();
+        return view('pages.admin.petugas.create', [
+            'pengguna' => $pengguna
+        ]);
     }
 
     /**
@@ -66,7 +71,24 @@ class PetugasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'pengguna_id' => 'required|unique:petugas,pengguna_id,null,id',
+            'nama_petugas' => 'required|string',
+            'jabatan' => 'required|string',
+            'tanggal_bergabung' => 'required',
+        ], [
+            'pengguna_id.required' => 'Pengguna harus dipilih.',
+            'pengguna_id.unique' => 'Pengguna sudah dipilih.',
+            'nama_petugas.required' => 'Nama petugas harus diisi.',
+            'nama_petugas.string' => 'Nama petugas harus berupa teks.',
+            'jabatan.required' => 'Jabatan harus diisi.',
+            'jabatan.string' => 'Jabatan harus berupa teks.',
+            'tanggal_bergabung.required' => 'Tanggal bergabung harus diisi.',
+        ]);
+
+
+        Petugas::create($validate);
+        return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil ditambahkan');
     }
 
     /**

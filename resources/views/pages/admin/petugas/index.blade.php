@@ -119,7 +119,7 @@
             <tbody>
               @if (empty($data))
                 <tr>
-                  <td colspan="5" class="text-center">
+                  <td colspan="7" class="text-center">
                     <img src="/images/404-error.png" alt="Not Found Img" class="w-25 h-25">
                     <h4 class="fw-bold">Data Tidak Ditemukan</h4>
                   </td>
