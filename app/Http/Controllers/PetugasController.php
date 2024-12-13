@@ -25,15 +25,14 @@ class PetugasController extends Controller
         foreach ($filters as $filterName => $filterValue) {
             if (!empty($filterValue)) {
                 match ($filterName) {
-                    'nama_petugas' => $query->where('nama_petugas', 'like', '%' . $filterValue . '%'),
-                    'jabatan' => $query->where('jabatan', 'like', '%' . $filterValue . '%'),
-                    'tanggal_bergabung_mulai' => $query->where('tanggal_bergabung', '>=', Carbon::parse($filterValue)->format('Y-m-d')),
-                    'tanggal_bergabung_selesai' => $query->where('tanggal_bergabung', '<=', Carbon::parse($filterValue)->format('Y-m-d')),
+                    'nama_petugas' => $query->where('petugas.nama_petugas', 'like', '%' . $filterValue . '%'),
+                    'jabatan' => $query->where('petugas.jabatan', 'like', '%' . $filterValue . '%'),
+                    'tanggal_bergabung_mulai' => $query->where('petugas.tanggal_bergabung', '>=', Carbon::parse($filterValue)->format('Y-m-d')),
+                    'tanggal_bergabung_selesai' => $query->where('petugas.tanggal_bergabung', '<=', Carbon::parse($filterValue)->format('Y-m-d')),
                 };
             }
         }
     }
-
 
     /**
      * Fungsi untuk menampilkan halaman petugas
@@ -62,7 +61,7 @@ class PetugasController extends Controller
     {
         $pengguna = Pengguna::whereDoesntHave('petugas')->where('role', 'Petugas Kebun')->get();
         return view('pages.admin.petugas.create', [
-            'pengguna' => $pengguna
+            'pengguna' => $pengguna,
         ]);
     }
 
@@ -71,21 +70,23 @@ class PetugasController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            'pengguna_id' => 'required|unique:petugas,pengguna_id,null,id',
-            'nama_petugas' => 'required|string',
-            'jabatan' => 'required|string',
-            'tanggal_bergabung' => 'required',
-        ], [
-            'pengguna_id.required' => 'Pengguna harus dipilih.',
-            'pengguna_id.unique' => 'Pengguna sudah dipilih.',
-            'nama_petugas.required' => 'Nama petugas harus diisi.',
-            'nama_petugas.string' => 'Nama petugas harus berupa teks.',
-            'jabatan.required' => 'Jabatan harus diisi.',
-            'jabatan.string' => 'Jabatan harus berupa teks.',
-            'tanggal_bergabung.required' => 'Tanggal bergabung harus diisi.',
-        ]);
-
+        $validate = $request->validate(
+            [
+                'pengguna_id' => 'required|unique:petugas,pengguna_id,null,id',
+                'nama_petugas' => 'required|string',
+                'jabatan' => 'required|string',
+                'tanggal_bergabung' => 'required',
+            ],
+            [
+                'pengguna_id.required' => 'Pengguna harus dipilih.',
+                'pengguna_id.unique' => 'Pengguna sudah dipilih.',
+                'nama_petugas.required' => 'Nama petugas harus diisi.',
+                'nama_petugas.string' => 'Nama petugas harus berupa teks.',
+                'jabatan.required' => 'Jabatan harus diisi.',
+                'jabatan.string' => 'Jabatan harus berupa teks.',
+                'tanggal_bergabung.required' => 'Tanggal bergabung harus diisi.',
+            ],
+        );
 
         Petugas::create($validate);
         return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil ditambahkan');

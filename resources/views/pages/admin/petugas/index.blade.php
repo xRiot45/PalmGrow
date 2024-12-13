@@ -38,7 +38,7 @@
             {{-- Modal Filter Start --}}
             <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
               aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="filterModalLabel">Filter Data Petugas</h5>
@@ -51,41 +51,44 @@
                     <form action="{{ route('admin.petugas.index') }}" method="GET">
                       {{-- Input Nama Petugas --}}
                       <div class="mb-3">
-                        <label class="form-label" for="name">Nama Petugas</label>
-                        <input type="text" id="name" name="name" class="form-control"
-                          value="{{ request()->get('name') }}" placeholder="Masukkan nama pengguna">
+                        <label class="form-label" for="nama_petugas">Nama Petugas</label>
+                        <input type="text" id="nama_petugas" name="nama_petugas"
+                          class="form-control" value="{{ request()->get('nama_petugas') }}"
+                          placeholder="Masukkan nama petugas">
                       </div>
 
-                      {{-- Input email --}}
+                      {{-- Input Jabatan --}}
                       <div class="mb-3">
-                        <label class="form-label" for="email">Email Pengguna</label>
-                        <input type="email" id="email" name="email" class="form-control"
-                          value="{{ request()->get('email') }}" placeholder="Masukkan email pengguna">
+                        <label class="form-label" for="jabatan">Jabatan</label>
+                        <input type="text" id="jabatan" name="jabatan" class="form-control"
+                          value="{{ request()->get('jabatan') }}" placeholder="Masukkan jabatan">
                       </div>
 
-                      {{-- Select Role --}}
-                      <div class="mb-3">
-                        <label class="form-label" for="role">Role</label>
-                        <select name="role" id="role" class="form-control"
-                          aria-label="Pilih Role" data-choices data-choices-search-false
-                          data-choices-removeItem>
-                          <option value="">-- Pilih Role --</option>
-                          <option value="Admin"
-                            {{ request()->get('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
-                          <option value="Petugas Kebun"
-                            {{ request()->get('role') == 'Petugas Kebun' ? 'selected' : '' }}>Petugas
-                            Kebun</option>
-                          <option value="Manajer"
-                            {{ request()->get('role') == 'Manajer' ? 'selected' : '' }}>Manajer
-                          </option>
-                        </select>
+                      {{-- Tanggal Bergabung --}}
+                      <div class="d-flex gap-2">
+                        <div class="mb-3 w-100">
+                          <label class="form-label" for="tanggal_bergabung_mulai">
+                            Tanggal Bergabung Mulai
+                          </label>
+                          <input type="date" id="tanggal_bergabung_mulai" class="form-control"
+                            placeholder="-- Pilih Tanggal --" name="tanggal_bergabung_mulai"
+                            value="{{ request()->get('tanggal_bergabung_mulai') }}">
+                        </div>
+                        <div class="mb-3 w-100">
+                          <label class="form-label" for="tanggal_bergabung_selesai">
+                            Tanggal Bergabung Selesai
+                          </label>
+                          <input type="date" id="tanggal_bergabung_selesai" class="form-control"
+                            placeholder="-- Pilih Tanggal --" name="tanggal_bergabung_selesai"
+                            value="{{ request()->get('tanggal_bergabung_selesai') }}">
+                        </div>
                       </div>
 
                       {{-- Button Submit --}}
                       <div class="w-100 d-flex gap-1 justify-content-end">
                         <button type="button" class="btn btn-secondary"
                           data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Cari Pengguna</button>
+                        <button type="submit" class="btn btn-primary">Cari Petugas</button>
                       </div>
                     </form>
                   </div>
