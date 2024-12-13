@@ -59,6 +59,7 @@ class PetugasController extends Controller
      */
     public function create(): View
     {
+        // Ambil data pengguna yang tidak terdaftar sebagai petugas dengan syarat role adalah 'Petugas Kebun'
         $pengguna = Pengguna::whereDoesntHave('petugas')->where('role', 'Petugas Kebun')->get();
         return view('pages.admin.petugas.create', [
             'pengguna' => $pengguna,
@@ -66,9 +67,11 @@ class PetugasController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Fungsi untuk menambahkan data petugas
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validate = $request->validate(
             [
@@ -93,20 +96,51 @@ class PetugasController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Fungsi untuk menampilkan halaman edit petugas dan mengirimkan data petugas berdasarkan id beserta data relasi pengguna
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
      */
-    public function edit(Petugas $petugas)
+    public function edit($id): View
     {
-        //
+        $petugas = Petugas::with('pengguna')->findOrFail($id);
+        $pengguna = Pengguna::all();
+
+        return view('pages.admin.petugas.edit', [
+            'data' => $petugas,
+            'pengguna' => $pengguna,
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Fungsi untuk mengupdate data petugas
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Petugas $petugas)
+    public function update(Request $request, $id): RedirectResponse
     {
-        //
+        $request->validate(
+            [
+                'pengguna_id' => 'required|unique:petugas,pengguna_id,' . $id . ',id',
+                'nama_petugas' => 'required|string',
+                'jabatan' => 'required|string',
+                'tanggal_bergabung' => 'required',
+            ],
+            [
+                'pengguna_id.required' => 'Pengguna harus dipilih.',
+                'nama_petugas.required' => 'Nama petugas harus diisi.',
+                'nama_petugas.string' => 'Nama petugas harus berupa teks.',
+                'jabatan.required' => 'Jabatan harus diisi.',
+                'jabatan.string' => 'Jabatan harus berupa teks.',
+                'tanggal_bergabung.required' => 'Tanggal bergabung harus diisi.',
+            ],
+        );
+
+        $petugas = Petugas::findOrFail($id);
+        $petugas->update($request->only(['pengguna_id', 'nama_petugas', 'jabatan', 'tanggal_bergabung']));
+        return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil diperbarui');
     }
+
 
     /**
      * Fungsi untuk menghapus data petugas
