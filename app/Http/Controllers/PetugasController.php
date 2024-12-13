@@ -3,18 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\Petugas;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PetugasController extends Controller
 {
     /**
+     * SFungsi untuk menerapkan fitur filter
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    private function applyFilters(Builder $query, Request $request): void
+    {
+        $filters = $request->only(['nama_petugas', 'jabatan', 'tanggal_bergabung_mulai', 'tanggal_bergabung_selesai']);
+
+        foreach ($filters as $filterName => $filterValue) {
+            if (!empty($filterValue)) {
+                match ($filterName) {
+                    'nama_petugas' => $query->where('nama_petugas', 'like', '%' . $filterValue . '%'),
+                    'jabatan' => $query->where('jabatan', 'like', '%' . $filterValue . '%'),
+                    'tanggal_bergabung_mulai' => $query->where('tanggal_bergabung', '>=', Carbon::parse($filterValue)->format('Y-m-d')),
+                    'tanggal_bergabung_selesai' => $query->where('tanggal_bergabung', '<=', Carbon::parse($filterValue)->format('Y-m-d')),
+                };
+            }
+        }
+    }
+
+
+    /**
      * Fungsi untuk menampilkan halaman petugas
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('pages.admin.petugas.index');
+        $per_page = $request->input('per_page', 10);
+        $query = Petugas::query()->orderBy('created_at', 'desc');
+
+        $this->applyFilters($query, $request);
+
+        $petugas = $query->paginate($per_page)->withQueryString();
+
+        return view('pages.admin.petugas.index', [
+            'data' => $petugas->items(),
+            'pagination' => $petugas,
+        ]);
     }
 
     /**
@@ -29,14 +65,6 @@ class PetugasController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Petugas $petugas)
     {
         //
     }
@@ -58,10 +86,14 @@ class PetugasController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Fungsi untuk menghapus data petugas
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Petugas $petugas)
+    public function destroy($id): RedirectResponse
     {
-        //
+        $petugas = Petugas::findOrFail($id);
+        $petugas->delete();
+        return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil dihapus');
     }
 }

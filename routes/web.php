@@ -47,11 +47,11 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Petugas
     Route::prefix('/admin/petugas')->group(function () {
         Route::get('/', [PetugasController::class, 'index'])->name('admin.petugas.index');
-        // Route::get('/tambah-petugas', [PetugasController::class, 'create'])->name('admin.petugas.create');
-        // Route::post('/tambah-petugas', [PetugasController::class, 'store'])->name('admin.petugas.store');
-        // Route::get('/edit-petugas/{id}', [PetugasController::class, 'edit'])->name('admin.petugas.edit');
-        // Route::put('/edit-petugas/{id}', [PetugasController::class, 'update'])->name('admin.petugas.update');
-        // Route::delete('/{id}', [PetugasController::class, 'destroy'])->name('admin.petugas.destroy');
+        Route::get('/tambah-petugas', [PetugasController::class, 'create'])->name('admin.petugas.create');
+        Route::post('/tambah-petugas', [PetugasController::class, 'store'])->name('admin.petugas.store');
+        Route::get('/edit-petugas/{id}', [PetugasController::class, 'edit'])->name('admin.petugas.edit');
+        Route::put('/edit-petugas/{id}', [PetugasController::class, 'update'])->name('admin.petugas.update');
+        Route::delete('/{id}', [PetugasController::class, 'destroy'])->name('admin.petugas.destroy');
     });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');
