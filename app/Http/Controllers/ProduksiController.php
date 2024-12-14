@@ -6,10 +6,17 @@ use App\Models\Kebun;
 use App\Models\Produksi;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ProduksiController extends Controller
 {
+    /**
+     * Fungsi untuk menerapkan fitur filter
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
     protected function applyFilters(Builder $query, Request $request)
     {
         $filters = $request->only([
@@ -109,10 +116,14 @@ class ProduksiController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Fungsi untuk menghapus data produksi
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Produksi $produksi)
+    public function destroy($id): RedirectResponse
     {
-        //
+        $produksi = Produksi::findOrFail($id);
+        $produksi->delete();
+        return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil dihapus');
     }
 }
