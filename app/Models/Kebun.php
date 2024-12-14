@@ -28,4 +28,9 @@ class Kebun extends Model
             'tanggal_panen' => 'date',
         ];
     }
+
+    public function produksi()
+    {
+        return $this->hasMany(Produksi::class);
+    }
 }

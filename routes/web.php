@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KebunController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PetugasController;
+use App\Http\Controllers\ProduksiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingController;
 
@@ -52,6 +53,16 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::get('/edit-petugas/{id}', [PetugasController::class, 'edit'])->name('admin.petugas.edit');
         Route::put('/edit-petugas/{id}', [PetugasController::class, 'update'])->name('admin.petugas.update');
         Route::delete('/{id}', [PetugasController::class, 'destroy'])->name('admin.petugas.destroy');
+    });
+
+    // Produksi
+    Route::prefix('/admin/produksi')->group(function () {
+        Route::get('/', [ProduksiController::class, 'index'])->name('admin.produksi.index');
+        Route::get('/tambah-produksi', [ProduksiController::class, 'create'])->name('admin.produksi.create');
+        Route::post('/tambah-produksi', [ProduksiController::class, 'store'])->name('admin.produksi.store');
+        Route::get('/edit-produksi/{id}', [ProduksiController::class, 'edit'])->name('admin.produksi.edit');
+        Route::put('/edit-produksi/{id}', [ProduksiController::class, 'update'])->name('admin.produksi.update');
+        Route::delete('/{id}', [ProduksiController::class, 'destroy'])->name('admin.produksi.destroy');
     });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');

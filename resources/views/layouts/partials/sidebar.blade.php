@@ -66,6 +66,16 @@
         </a>
       </li>
 
+      {{-- Produksi --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.produksi.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="material-symbols:factory"></iconify-icon>
+          </span>
+          <span class="nav-text"> Produksi </span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse"
           role="button" aria-expanded="false" aria-controls="sidebarProducts">
