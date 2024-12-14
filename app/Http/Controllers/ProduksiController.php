@@ -76,43 +76,86 @@ class ProduksiController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Fungsi untuk menampilkan halaman tambah produksi & mengirimkan data lokasi kebun
+     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $lokasi_kebun = Kebun::select('id', 'lokasi')->where('status', 'Aktif')->get();
+        return view('pages.admin.produksi.create', [
+            'lokasi_kebun' => $lokasi_kebun
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validate = $request->validate([
+            'kebun_id' => 'required',
+            'jumlah_tandan' => 'required|integer',
+            'berat_total' => 'required|integer',
+            'tanggal_panen' => 'required'
+        ], [
+            'kebun_id.required' => 'Kebun Harus Dipilih',
+            'jumlah_tandan.required' => 'Jumlah tandan harus diisi',
+            'jumlah_tandan.integer' => 'Jumlah tandan harus berupa angka',
+            'berat_total.required' => 'Berat total harus diisi',
+            'berat_total.integer' => 'Berat total harus berupa angka',
+            'tanggal_panen.required' => 'Tanggal panen harus diisi'
+        ]);
+
+        Produksi::create($validate);
+        return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil ditambahkan');
+    }
+
+
+    /**
+     * Fungsi untuk menampilkan halaman edit produksi & mengirimkan data lokasi kebun dan data produksi berdasarkan id
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function edit($id): View
+    {
+        $produksi = Produksi::with('kebun')->findOrFail($id);
+        $lokasi_kebun = Kebun::select('id', 'lokasi')->where('status', 'Aktif')->get();
+        return view('pages.admin.produksi.edit', [
+            'data' => $produksi,
+            'lokasi_kebun' => $lokasi_kebun
+        ]);
     }
 
     /**
-     * Display the specified resource.
+     * Fungsi untuk mengupdate data produksi
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return RedirectResponse
      */
-    public function show(Produksi $produksi)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'kebun_id' => 'required',
+            'jumlah_tandan' => 'required|integer',
+            'berat_total' => 'required|integer',
+            'tanggal_panen' => 'required'
+        ], [
+            'kebun_id.required' => 'Kebun Harus Dipilih',
+            'jumlah_tandan.required' => 'Jumlah tandan harus diisi',
+            'jumlah_tandan.integer' => 'Jumlah tandan harus berupa angka',
+            'berat_total.required' => 'Berat total harus diisi',
+            'berat_total.integer' => 'Berat total harus berupa angka',
+            'tanggal_panen.required' => 'Tanggal panen harus diisi'
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Produksi $produksi)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Produksi $produksi)
-    {
-        //
+        $produksi = Produksi::findOrFail($id);
+        $produksi->update($request->only([
+            'kebun_id',
+            'jumlah_tandan',
+            'berat_total',
+            'tanggal_panen'
+        ]));
+        return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil diperbarui');
     }
 
     /**

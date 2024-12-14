@@ -207,7 +207,7 @@
                     <td> {{ $produksi->jumlah_tandan }} </td>
 
                     {{-- Berat Total --}}
-                    <td> {{ $produksi->jumlah_tandan }} </td>
+                    <td> {{ $produksi->berat_total }} </td>
 
                     {{-- Tanggal Panen --}}
                     <td>{{ $produksi->tanggal_panen->format('Y-m-d') }}</td>
