@@ -76,6 +76,16 @@
         </a>
       </li>
 
+      {{-- Distribusi --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.distribusi.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="lsicon:distribution-filled"></iconify-icon>
+          </span>
+          <span class="nav-text"> Distribusi </span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse"
           role="button" aria-expanded="false" aria-controls="sidebarProducts">

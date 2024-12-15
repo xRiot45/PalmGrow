@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\KebunController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PetugasController;
@@ -63,6 +64,16 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::get('/edit-produksi/{id}', [ProduksiController::class, 'edit'])->name('admin.produksi.edit');
         Route::put('/edit-produksi/{id}', [ProduksiController::class, 'update'])->name('admin.produksi.update');
         Route::delete('/{id}', [ProduksiController::class, 'destroy'])->name('admin.produksi.destroy');
+    });
+
+    // Distribusi
+    Route::prefix('/admin/distribusi')->group(function () {
+        Route::get('/', [DistribusiController::class, 'index'])->name('admin.distribusi.index');
+        Route::get('/tambah-distribusi', [DistribusiController::class, 'create'])->name('admin.distribusi.create');
+        Route::post('/tambah-distribusi', [DistribusiController::class, 'store'])->name('admin.distribusi.store');
+        Route::get('/edit-distribusi/{id}', [DistribusiController::class, 'edit'])->name('admin.distribusi.edit');
+        Route::put('/edit-distribusi/{id}', [DistribusiController::class, 'update'])->name('admin.distribusi.update');
+        Route::delete('/{id}', [DistribusiController::class, 'destroy'])->name('admin.distribusi.destroy');
     });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');
