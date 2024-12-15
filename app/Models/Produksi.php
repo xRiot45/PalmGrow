@@ -29,4 +29,9 @@ class Produksi extends Model
     {
         return $this->belongsTo(Kebun::class);
     }
+
+    public function distribusi()
+    {
+        return $this->hasMany(Distribusi::class);
+    }
 }
