@@ -6,6 +6,7 @@ use App\Models\Distribusi;
 use App\Models\Kebun;
 use App\Models\Produksi;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -61,49 +62,103 @@ class DistribusiController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Fungsi untuk menampilkan halaman tambah distribusi dan mengirimkan data lokasi kebun dari produksi
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $lokasi_kebun = Produksi::join('kebun', 'kebun.id', '=', 'produksi.kebun_id')
+            ->select('produksi.id as produksi_id', 'kebun.lokasi')
+            ->distinct()
+            ->get();
+        return view('pages.admin.distribusi.create', [
+            'lokasi_kebun' => $lokasi_kebun
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Fungsi untuk menambahkan data distribusi
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validate = $request->validate([
+            'produksi_id' => 'required|exists:produksi,id',
+            'tujuan' => 'required|string',
+            'jumlah' => 'required|integer',
+            'tanggal_distribusi' => 'required'
+        ], [
+            'produksi_id.required' => 'Produksi Harus Dipilih',
+            'produksi_id.exists' => 'Produksi yang dipilih tidak valid',
+            'tujuan.required' => 'Tujuan harus diisi',
+            'tujuan.string' => 'Tujuan harus berupa teks',
+            'jumlah.required' => 'Jumlah harus diisi',
+            'jumlah.integer' => 'Jumlah harus berupa angka',
+            'tanggal_distribusi.required' => 'Tanggal distribusi harus diisi'
+        ]);
+
+        Distribusi::create($validate);
+        return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil ditambahkan');
     }
 
     /**
-     * Display the specified resource.
+     * Fungsi untuk menampilkan halaman edit distribusi dan mengirimkan data distribusi berdasarkan id serta data lokasi kebun
+     * @param mixed $id
+     * @return \Illuminate\View\View
      */
-    public function show(Distribusi $distribusi)
+    public function edit($id): View
     {
-        //
+        $distribusi = Distribusi::with('produksi.kebun')->findOrFail($id);
+        $lokasi_kebun = Produksi::join('kebun', 'kebun.id', '=', 'produksi.kebun_id')
+            ->select('produksi.id as produksi_id', 'kebun.lokasi')
+            ->distinct()
+            ->get();
+        return view('pages.admin.distribusi.edit', [
+            'data' => $distribusi,
+            'lokasi_kebun' => $lokasi_kebun
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Fungsi untuk update data distribusi
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit(Distribusi $distribusi)
+    public function update(Request $request, $id): RedirectResponse
     {
-        //
+        $request->validate([
+            'produksi_id' => 'required|exists:produksi,id',
+            'tujuan' => 'required|string',
+            'jumlah' => 'required|integer',
+            'tanggal_distribusi' => 'required'
+        ], [
+            'produksi_id.required' => 'Produksi Harus Dipilih',
+            'produksi_id.exists' => 'Produksi yang dipilih tidak valid',
+            'tujuan.required' => 'Tujuan harus diisi',
+            'tujuan.string' => 'Tujuan harus berupa teks',
+            'jumlah.required' => 'Jumlah harus diisi',
+            'jumlah.integer' => 'Jumlah harus berupa angka',
+            'tanggal_distribusi.required' => 'Tanggal distribusi harus diisi'
+        ]);
+
+        $distribusi = Distribusi::findOrFail($id);
+        $distribusi->update($request->only([
+            'produksi_id',
+            'tujuan',
+            'jumlah',
+            'tanggal_distribusi'
+        ]));
+        return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil diubah');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Fungsi untuk menghapus data distribusi
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Distribusi $distribusi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         $distribusi = Distribusi::find($id);
         $distribusi->delete();
