@@ -15,13 +15,13 @@ class Produksi extends Model
         'kebun_id',
         'jumlah_tandan',
         'berat_total',
-        'tanggal_panen',
+        'tanggal_produksi',
     ];
 
     protected function casts(): array
     {
         return  [
-            'tanggal_panen' => 'date',
+            'tanggal_produksi' => 'date',
         ];
     }
 

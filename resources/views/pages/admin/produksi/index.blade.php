@@ -126,23 +126,23 @@
                         </div>
                       </div>
 
-                      {{-- Tanggal Panen --}}
+                      {{-- Tanggal Produksi --}}
                       <div class="d-flex gap-2">
                         <div class="mb-3 w-100">
-                          <label class="form-label" for="tanggal_panen_mulai">
-                            Tanggal Panen Mulai
+                          <label class="form-label" for="tanggal_produksi_mulai">
+                            Tanggal Produksi Mulai
                           </label>
-                          <input type="date" id="tanggal_panen_mulai" class="form-control"
-                            placeholder="-- Pilih Tanggal --" name="tanggal_panen_mulai"
-                            value="{{ request()->get('tanggal_panen_mulai') }}">
+                          <input type="date" id="tanggal_produksi_mulai" class="form-control"
+                            placeholder="-- Pilih Tanggal --" name="tanggal_produksi_mulai"
+                            value="{{ request()->get('tanggal_produksi_mulai') }}">
                         </div>
                         <div class="mb-3 w-100">
-                          <label class="form-label" for="tanggal_panen_selesai">
-                            Tanggal Panen Selesai
+                          <label class="form-label" for="tanggal_produksi_selesai">
+                            Tanggal Produksi Selesai
                           </label>
-                          <input type="date" id="tanggal_panen_selesai" class="form-control"
-                            placeholder="-- Pilih Tanggal --" name="tanggal_panen_selesai"
-                            value="{{ request()->get('tanggal_panen_selesai') }}">
+                          <input type="date" id="tanggal_produksi_selesai" class="form-control"
+                            placeholder="-- Pilih Tanggal --" name="tanggal_produksi_selesai"
+                            value="{{ request()->get('tanggal_produksi_selesai') }}">
                         </div>
                       </div>
 
@@ -175,7 +175,7 @@
                 <th>Luas Kebun</th>
                 <th>Jumlah Tandan</th>
                 <th>Berat Total</th>
-                <th>Tanggal Panen</th>
+                <th>Tanggal Produksi</th>
               </tr>
             </thead>
             {{-- Table Head End --}}
@@ -209,8 +209,8 @@
                     {{-- Berat Total --}}
                     <td> {{ $produksi->berat_total }} </td>
 
-                    {{-- Tanggal Panen --}}
-                    <td>{{ $produksi->tanggal_panen->format('Y-m-d') }}</td>
+                    {{-- Tanggal Produksi --}}
+                    <td>{{ $produksi->tanggal_produksi->format('Y-m-d') }}</td>
 
 
                     {{-- Button Aksi --}}

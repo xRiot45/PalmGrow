@@ -27,8 +27,8 @@ class ProduksiController extends Controller
             'jumlah_tandan_selesai',
             'berat_total_mulai',
             'berat_total_selesai',
-            'tanggal_panen_mulai',
-            'tanggal_panen_selesai'
+            'tanggal_produksi_mulai',
+            'tanggal_produksi_selesai'
         ]);
 
         foreach ($filters as $filterName => $filterValue) {
@@ -47,8 +47,8 @@ class ProduksiController extends Controller
                     'jumlah_tandan_selesai' => $query->where('jumlah_tandan', '<=', $filterValue),
                     'berat_total_mulai' => $query->where('berat_total', '>=', $filterValue),
                     'berat_total_selesai' => $query->where('berat_total', '<=', $filterValue),
-                    'tanggal_panen_mulai' => $query->where('tanggal_panen', '>=', $filterValue),
-                    'tanggal_panen_selesai' => $query->where('tanggal_panen', '<=', $filterValue),
+                    'tanggal_produksi_mulai' => $query->where('tanggal_produksi', '>=', $filterValue),
+                    'tanggal_produksi_selesai' => $query->where('tanggal_produksi', '<=', $filterValue),
                 };
             }
         }
@@ -96,14 +96,14 @@ class ProduksiController extends Controller
             'kebun_id' => 'required',
             'jumlah_tandan' => 'required|integer',
             'berat_total' => 'required|integer',
-            'tanggal_panen' => 'required'
+            'tanggal_produksi' => 'required'
         ], [
             'kebun_id.required' => 'Kebun Harus Dipilih',
             'jumlah_tandan.required' => 'Jumlah tandan harus diisi',
             'jumlah_tandan.integer' => 'Jumlah tandan harus berupa angka',
             'berat_total.required' => 'Berat total harus diisi',
             'berat_total.integer' => 'Berat total harus berupa angka',
-            'tanggal_panen.required' => 'Tanggal panen harus diisi'
+            'tanggal_produksi.required' => 'Tanggal panen harus diisi'
         ]);
 
         Produksi::create($validate);
@@ -138,14 +138,14 @@ class ProduksiController extends Controller
             'kebun_id' => 'required',
             'jumlah_tandan' => 'required|integer',
             'berat_total' => 'required|integer',
-            'tanggal_panen' => 'required'
+            'tanggal_produksi' => 'required'
         ], [
             'kebun_id.required' => 'Kebun Harus Dipilih',
             'jumlah_tandan.required' => 'Jumlah tandan harus diisi',
             'jumlah_tandan.integer' => 'Jumlah tandan harus berupa angka',
             'berat_total.required' => 'Berat total harus diisi',
             'berat_total.integer' => 'Berat total harus berupa angka',
-            'tanggal_panen.required' => 'Tanggal panen harus diisi'
+            'tanggal_produksi.required' => 'Tanggal panen harus diisi'
         ]);
 
         $produksi = Produksi::findOrFail($id);
@@ -153,7 +153,7 @@ class ProduksiController extends Controller
             'kebun_id',
             'jumlah_tandan',
             'berat_total',
-            'tanggal_panen'
+            'tanggal_produksi'
         ]));
         return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil diperbarui');
     }

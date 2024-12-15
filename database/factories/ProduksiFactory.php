@@ -21,7 +21,7 @@ class ProduksiFactory extends Factory
             'kebun_id' => Kebun::inRandomOrder()->first()->id,
             'jumlah_tandan' => $this->faker->randomNumber(2),
             'berat_total' => $this->faker->randomFloat(2, 0, 100),
-            'tanggal_panen' => $this->faker->date('Y-m-d', 'now')
+            'tanggal_produksi' => $this->faker->date('Y-m-d', 'now')
         ];
     }
 }

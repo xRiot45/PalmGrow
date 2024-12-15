@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pengguna>
@@ -19,7 +20,7 @@ class PenggunaFactory extends Factory
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
-            'password' => bcrypt('password'),
+            'password' => Hash::make('password'),
             'role' => $this->faker->randomElement(['Admin', 'Petugas Kebun', 'Manajer']),
         ];
     }

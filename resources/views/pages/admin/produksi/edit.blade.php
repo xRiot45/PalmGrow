@@ -56,13 +56,13 @@
 
       {{-- Tanggal Panen Start --}}
       <div class="col-md-6 mb-3">
-        <label class="form-label" for="tanggal_panen">
+        <label class="form-label" for="tanggal_produksi">
           Tanggal Panen
         </label>
-        <input type="date" id="tanggal_panen" class="form-control"
-          placeholder="-- Pilih Tanggal --" name="tanggal_panen"
-          value="{{ old('tanggal_panen', $data->tanggal_panen->format('Y-m-d')) }}">
-        @error('tanggal_panen')
+        <input type="date" id="tanggal_produksi" class="form-control"
+          placeholder="-- Pilih Tanggal --" name="tanggal_produksi"
+          value="{{ old('tanggal_produksi', $data->tanggal_produksi->format('Y-m-d')) }}">
+        @error('tanggal_produksi')
           <span class="text-danger error-message">{{ $message }}</span>
         @enderror
       </div>

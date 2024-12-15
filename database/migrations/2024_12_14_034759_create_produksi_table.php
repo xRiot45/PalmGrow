@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('kebun_id')->constrained('kebun')->onDelete('cascade');
             $table->integer('jumlah_tandan');
             $table->integer('berat_total');
-            $table->date('tanggal_panen')->default(date('Y-m-d'));
+            $table->date('tanggal_produksi')->default(date('Y-m-d'));
             $table->timestamps();
         });
     }

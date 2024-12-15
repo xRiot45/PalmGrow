@@ -51,19 +51,19 @@
       </div>
       {{-- Berat Total End --}}
 
-      {{-- Tanggal Panen Start --}}
+      {{-- Tanggal Produksi Start --}}
       <div class="col-md-6 mb-3">
-        <label class="form-label" for="tanggal_panen">
-          Tanggal Panen
+        <label class="form-label" for="tanggal_produksi">
+          Tanggal Produksi
         </label>
-        <input type="date" id="tanggal_panen" class="form-control"
-          placeholder="-- Pilih Tanggal --" name="tanggal_panen"
-          value="{{ request()->get('tanggal_panen') }}">
-        @error('tanggal_panen')
+        <input type="date" id="tanggal_produksi" class="form-control"
+          placeholder="-- Pilih Tanggal --" name="tanggal_produksi"
+          value="{{ request()->get('tanggal_produksi') }}">
+        @error('tanggal_produksi')
           <span class="text-danger error-message">{{ $message }}</span>
         @enderror
       </div>
-      {{-- Tanggal Panen End --}}
+      {{-- Tanggal Produksi End --}}
     </div>
 
     <div class="w-100 d-flex gap-1 justify-content-end">
