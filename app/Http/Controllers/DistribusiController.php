@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Distribusi;
-use App\Models\Kebun;
 use App\Models\Produksi;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -12,17 +11,9 @@ use Illuminate\View\View;
 
 class DistribusiController extends Controller
 {
-
     protected function applyFilters(Builder $query, Request $request)
     {
-        $filters = $request->only([
-            'tujuan_distribusi',
-            'jumlah_distribusi_mulai',
-            'jumlah_distribusi_selesai',
-            'tanggal_distribusi_mulai',
-            'tanggal_distribusi_selesai',
-            'lokasi_kebun',
-        ]);
+        $filters = $request->only(['tujuan_distribusi', 'jumlah_distribusi_mulai', 'jumlah_distribusi_selesai', 'tanggal_distribusi_mulai', 'tanggal_distribusi_selesai', 'lokasi_kebun']);
 
         foreach ($filters as $filterName => $filterValue) {
             if (!empty($filterValue)) {
@@ -40,7 +31,6 @@ class DistribusiController extends Controller
         }
     }
 
-
     /**
      * Fungsi untuk menampilkan halaman distribusi, menerapkan fitur filter, menerapkan fitur pagination dan mengirimkan data lokasi kebun berdasarkan id kebun
      * @return \Illuminate\View\View
@@ -57,7 +47,7 @@ class DistribusiController extends Controller
         return view('pages.admin.distribusi.index', [
             'data' => $distribusi->items(),
             'pagination' => $distribusi,
-            'lokasi_kebun' => $lokasi_kebun
+            'lokasi_kebun' => $lokasi_kebun,
         ]);
     }
 
@@ -67,12 +57,9 @@ class DistribusiController extends Controller
      */
     public function create(): View
     {
-        $lokasi_kebun = Produksi::join('kebun', 'kebun.id', '=', 'produksi.kebun_id')
-            ->select('produksi.id as produksi_id', 'kebun.lokasi')
-            ->distinct()
-            ->get();
+        $lokasi_kebun = Produksi::join('kebun', 'kebun.id', '=', 'produksi.kebun_id')->select('produksi.id as produksi_id', 'kebun.lokasi')->distinct()->get();
         return view('pages.admin.distribusi.create', [
-            'lokasi_kebun' => $lokasi_kebun
+            'lokasi_kebun' => $lokasi_kebun,
         ]);
     }
 
@@ -83,22 +70,36 @@ class DistribusiController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validate = $request->validate([
-            'produksi_id' => 'required|exists:produksi,id',
-            'tujuan' => 'required|string',
-            'jumlah' => 'required|integer',
-            'tanggal_distribusi' => 'required'
-        ], [
-            'produksi_id.required' => 'Produksi Harus Dipilih',
-            'produksi_id.exists' => 'Produksi yang dipilih tidak valid',
-            'tujuan.required' => 'Tujuan harus diisi',
-            'tujuan.string' => 'Tujuan harus berupa teks',
-            'jumlah.required' => 'Jumlah harus diisi',
-            'jumlah.integer' => 'Jumlah harus berupa angka',
-            'tanggal_distribusi.required' => 'Tanggal distribusi harus diisi'
-        ]);
+        $validate = $request->validate(
+            [
+                'produksi_id' => 'required|exists:produksi,id',
+                'tujuan' => 'required|string',
+                'jumlah' => 'required|integer',
+                'tanggal_distribusi' => 'required',
+            ],
+            [
+                'produksi_id.required' => 'Produksi Harus Dipilih',
+                'produksi_id.exists' => 'Produksi yang dipilih tidak valid',
+                'tujuan.required' => 'Tujuan harus diisi',
+                'tujuan.string' => 'Tujuan harus berupa teks',
+                'jumlah.required' => 'Jumlah harus diisi',
+                'jumlah.integer' => 'Jumlah harus berupa angka',
+                'tanggal_distribusi.required' => 'Tanggal distribusi harus diisi',
+            ],
+        );
+
+        $produksi = Produksi::find($validate['produksi_id']);
+        $jumlah_tandan = Produksi::find($validate['produksi_id'])->jumlah_tandan;
+
+        if ($validate['jumlah'] > $jumlah_tandan) {
+            return redirect()->route('admin.distribusi.create')->with('error', 'Jumlah distribusi tidak boleh melebihi jumlah tandan');
+        }
+
+        $produksi->jumlah_tandan -= $validate['jumlah'];
+        $produksi->save();
 
         Distribusi::create($validate);
+
         return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil ditambahkan');
     }
 
@@ -110,13 +111,10 @@ class DistribusiController extends Controller
     public function edit($id): View
     {
         $distribusi = Distribusi::with('produksi.kebun')->findOrFail($id);
-        $lokasi_kebun = Produksi::join('kebun', 'kebun.id', '=', 'produksi.kebun_id')
-            ->select('produksi.id as produksi_id', 'kebun.lokasi')
-            ->distinct()
-            ->get();
+        $lokasi_kebun = Produksi::join('kebun', 'kebun.id', '=', 'produksi.kebun_id')->select('produksi.id as produksi_id', 'kebun.lokasi')->distinct()->get();
         return view('pages.admin.distribusi.edit', [
             'data' => $distribusi,
-            'lokasi_kebun' => $lokasi_kebun
+            'lokasi_kebun' => $lokasi_kebun,
         ]);
     }
 
@@ -128,28 +126,40 @@ class DistribusiController extends Controller
      */
     public function update(Request $request, $id): RedirectResponse
     {
-        $request->validate([
-            'produksi_id' => 'required|exists:produksi,id',
-            'tujuan' => 'required|string',
-            'jumlah' => 'required|integer',
-            'tanggal_distribusi' => 'required'
-        ], [
-            'produksi_id.required' => 'Produksi Harus Dipilih',
-            'produksi_id.exists' => 'Produksi yang dipilih tidak valid',
-            'tujuan.required' => 'Tujuan harus diisi',
-            'tujuan.string' => 'Tujuan harus berupa teks',
-            'jumlah.required' => 'Jumlah harus diisi',
-            'jumlah.integer' => 'Jumlah harus berupa angka',
-            'tanggal_distribusi.required' => 'Tanggal distribusi harus diisi'
-        ]);
+        $request->validate(
+            [
+                'produksi_id' => 'required|exists:produksi,id',
+                'tujuan' => 'required|string',
+                'jumlah' => 'required|integer',
+                'tanggal_distribusi' => 'required',
+            ],
+            [
+                'produksi_id.required' => 'Produksi Harus Dipilih',
+                'produksi_id.exists' => 'Produksi yang dipilih tidak valid',
+                'tujuan.required' => 'Tujuan harus diisi',
+                'tujuan.string' => 'Tujuan harus berupa teks',
+                'jumlah.required' => 'Jumlah harus diisi',
+                'jumlah.integer' => 'Jumlah harus berupa angka',
+                'tanggal_distribusi.required' => 'Tanggal distribusi harus diisi',
+            ],
+        );
 
+        $produksi = Produksi::find($request->produksi_id);
+        $jumlah_tandan = Produksi::find($request->produksi_id)->jumlah_tandan;
         $distribusi = Distribusi::findOrFail($id);
-        $distribusi->update($request->only([
-            'produksi_id',
-            'tujuan',
-            'jumlah',
-            'tanggal_distribusi'
-        ]));
+        $jumlah_sebelumnya = $distribusi->jumlah;
+
+        if ($request->jumlah > $jumlah_tandan) {
+            return redirect()->route('admin.distribusi.edit', $id)->with('error', 'Jumlah distribusi tidak boleh melebihi jumlah tandan');
+        } else if ($request->jumlah < $jumlah_sebelumnya) {
+            return redirect()->route('admin.distribusi.edit', $id)->with('error', 'Jumlah distribusi tidak boleh kurang dari jumlah sebelumnya');
+        }
+
+        $distribusi->update($request->only(['produksi_id', 'tujuan', 'jumlah', 'tanggal_distribusi']));
+
+        $produksi->jumlah_tandan -= ($request->jumlah - $jumlah_sebelumnya);
+        $produksi->save();
+
         return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil diubah');
     }
 
