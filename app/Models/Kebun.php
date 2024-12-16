@@ -33,4 +33,9 @@ class Kebun extends Model
     {
         return $this->hasMany(Produksi::class);
     }
+
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class);
+    }
 }
