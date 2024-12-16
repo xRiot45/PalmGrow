@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\KebunController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProduksiController;
@@ -74,6 +75,16 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::get('/edit-distribusi/{id}', [DistribusiController::class, 'edit'])->name('admin.distribusi.edit');
         Route::put('/edit-distribusi/{id}', [DistribusiController::class, 'update'])->name('admin.distribusi.update');
         Route::delete('/{id}', [DistribusiController::class, 'destroy'])->name('admin.distribusi.destroy');
+    });
+
+    // Laporan
+    Route::prefix('/admin/laporan')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('admin.laporan.index');
+        Route::get('/tambah-laporan', [LaporanController::class, 'create'])->name('admin.laporan.create');
+        Route::post('/tambah-laporan', [LaporanController::class, 'store'])->name('admin.laporan.store');
+        Route::get('/edit-laporan/{id}', [LaporanController::class, 'edit'])->name('admin.laporan.edit');
+        Route::put('/edit-laporan/{id}', [LaporanController::class, 'update'])->name('admin.laporan.update');
+        Route::delete('/{id}', [LaporanController::class, 'destroy'])->name('admin.laporan.destroy');
     });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');
