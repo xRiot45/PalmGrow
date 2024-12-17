@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembayaran;
 use App\Models\Produksi;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,16 +12,51 @@ use Illuminate\View\View;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    private function applyFilters(Builder $query, Request $request)
     {
-        return view('pages.admin.pembayaran.index');
+        $filters = $request->only(['lokasi_produksi_kebun', 'jumlah_pembayaran_mulai', 'jumlah_pembayaran_selesai', 'metode_pembayaran', 'tanggal_pembayaran_mulai', 'tanggal_pembayaran_selesai']);
+
+        foreach ($filters as $filterName => $filterValue) {
+            if (!empty($filterValue)) {
+                match ($filterName) {
+                    'lokasi_produksi_kebun' => $query->whereHas('produksi', function ($q) use ($filterValue) {
+                        $q->whereHas('kebun', function ($q) use ($filterValue) {
+                            $q->where('lokasi', 'like', '%' . $filterValue . '%');
+                        });
+                    }),
+                    'jumlah_pembayaran_mulai' => $query->where('jumlah_pembayaran', '>=', $filterValue),
+                    'jumlah_pembayaran_selesai' => $query->where('jumlah_pembayaran', '<=', $filterValue),
+                    'metode_pembayaran' => $query->where('metode_pembayaran', 'like', '%' . $filterValue . '%'),
+                    'tanggal_pembayaran_mulai' => $query->where('tanggal_pembayaran', '>=', $filterValue),
+                    'tanggal_pembayaran_selesai' => $query->where('tanggal_pembayaran', '<=', $filterValue),
+                };
+            }
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Fungsi untuk menampilkan daftar data pembayaran
+     * @return \Illuminate\View\View
+     */
+    public function index(): View
+    {
+        $per_page = request()->input('per_page', 10);
+        $query = Pembayaran::query()->orderBy('created_at', 'desc');
+
+        $this->applyFilters($query, request());
+
+        $pembayaran = $query->paginate($per_page)->withQueryString();
+        $lokasi_produksi_kebun = Produksi::select('id', 'kebun_id')->get();
+        return view('pages.admin.pembayaran.index', [
+            'data' => $pembayaran->items(),
+            'pagination' => $pembayaran,
+            'lokasi_produksi_kebun' => $lokasi_produksi_kebun,
+        ]);
+    }
+
+    /**
+     * Fungsi untuk menampilkan form tambah data pembayaran
+     * @return \Illuminate\View\View
      */
     public function create(): View
     {
@@ -110,10 +146,10 @@ class PembayaranController extends Controller
     {
         $pembayaran = Pembayaran::find($id);
         if ($pembayaran) {
-            $metode_pembayaran = $pembayaran->metode_pembayaran;
+            $bukti_pembayaran = $pembayaran->bukti_pembayaran;
 
-            if (Storage::exists($metode_pembayaran)) {
-                Storage::delete($metode_pembayaran);
+            if (Storage::exists($bukti_pembayaran)) {
+                Storage::delete($bukti_pembayaran);
             }
 
             $pembayaran->delete();
@@ -122,5 +158,15 @@ class PembayaranController extends Controller
         }
 
         return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran tidak ditemukan');
+    }
+
+    public function view_file()
+    {
+        //
+    }
+
+    public function download_file()
+    {
+        //
     }
 }

@@ -11,7 +11,7 @@
     <div class="row">
       {{-- Lokasi Kebun Produksi Start --}}
       <div class="col-md-6 mb-3">
-        <label class="form-label" for="produksi_id">Lokasi Kebun Produksi</label>
+        <label class="form-label" for="produksi_id">Lokasi Produksi</label>
         <select name="produksi_id" id="produksi_id" class="form-control"
           aria-label="Pilih Lokasi Kebun Produksi" data-choices data-choices-search-true
           data-choices-removeItem>
