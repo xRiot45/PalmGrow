@@ -1,0 +1,15 @@
+@extends('layouts.vertical', ['title' => 'Bukti Laporan'])
+
+@section('css')
+  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
+@endsection
+
+@section('content')
+  <div>
+    <a href="{{ route('admin.laporan.index') }}" class="btn btn-md btn-primary mb-4">
+      Kembali Ke Halaman Sebelumnya
+    </a>
+    <embed src="{{ asset('storage/laporan/' . basename($pdfPath)) }}" type="application/pdf"
+      width="100%" height="800px">
+  </div>
+@endsection

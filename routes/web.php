@@ -80,6 +80,8 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Laporan
     Route::prefix('/admin/laporan')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('admin.laporan.index');
+        Route::get('/view-pdf/{id}', [LaporanController::class, 'view_pdf'])->name('admin.laporan.view_pdf');
+        Route::get('/download-pdf/{id}', [LaporanController::class, 'download_pdf'])->name('admin.laporan.download_pdf');
         Route::get('/tambah-laporan', [LaporanController::class, 'create'])->name('admin.laporan.create');
         Route::post('/tambah-laporan', [LaporanController::class, 'store'])->name('admin.laporan.store');
         Route::get('/edit-laporan/{id}', [LaporanController::class, 'edit'])->name('admin.laporan.edit');
