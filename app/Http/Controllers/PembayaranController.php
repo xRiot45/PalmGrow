@@ -202,13 +202,16 @@ class PembayaranController extends Controller
         return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran tidak ditemukan');
     }
 
-    // public function view_file($id)
-    // {
-    //     $pembayaran = Pembayaran::find($id);
-    // }
 
-    public function download_file()
+    /**
+     * Fungsi untuk mengunduh file bukti pembayaran
+     * @param mixed $id
+     * @return mixed|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download_file($id)
     {
-        //
+        $pembayaran = Pembayaran::find($id);
+        $bukti_pembayaran = storage_path('app/' . $pembayaran->bukti_pembayaran);
+        return response()->download($bukti_pembayaran);
     }
 }

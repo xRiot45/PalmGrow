@@ -206,14 +206,13 @@
 
                     {{-- Bukti Pembayaran --}}
                     <td class="d-flex items-center gap-2">
-                      <a href="{{ route('admin.pembayaran.view_file', $pembayaran->id) }}">
-                        <button type="button"
-                          class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-soft-blue">
-                          <iconify-icon icon="lsicon:report-filled"
-                            class="align-middle fs-18"></iconify-icon>
-                          Lihat
-                        </button>
-                      </a>
+                      <button type="button"
+                        class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-soft-blue"
+                        data-bs-toggle="modal" data-bs-target="#modalBuktiPembayaran">
+                        <iconify-icon icon="lsicon:report-filled"
+                          class="align-middle fs-18"></iconify-icon>
+                        Lihat
+                      </button>
 
                       <a href="{{ route('admin.pembayaran.download_file', $pembayaran->id) }}"
                         target="_blank">
@@ -221,7 +220,7 @@
                           class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-soft-success">
                           <iconify-icon icon="material-symbols:download"
                             class="align-middle fs-18"></iconify-icon>
-                          Download
+                          Unduh
                         </button>
                       </a>
                     </td>
@@ -278,8 +277,39 @@
                         </div>
                       </div>
                     </div>
-
                     {{-- Modal Hapus Data End --}}
+
+                    {{-- Modal Bukti Pembayaran Start --}}
+                    <div class="modal fade" id="modalBuktiPembayaran" tabindex="-1"
+                      aria-labelledby="modalBuktiPembayaran" aria-hidden="true">
+                      <div class="modal-dialog ">
+                        <div class="modal-content">
+                          {{-- Modal Body Start --}}
+                          <div class="modal-body">
+                            <div class="text-center">
+                              <img
+                                src="{{ $pembayaran->bukti_pembayaran ? asset('storage/pembayaran/' . basename($pembayaran->bukti_pembayaran)) : asset('images/404-error.png') }}"
+                                alt="Not Found Img" class="w-100 h-100">
+                            </div>
+
+                            <div class="w-100 d-flex gap-2 justify-content-center mt-3">
+                              <button type="button" class="btn btn-secondary w-100 py-2"
+                                data-bs-dismiss="modal">
+                                Tutup
+                              </button>
+                              <a class="w-100"
+                                href="{{ route('admin.pembayaran.download_file', $pembayaran->id) }}">
+                                <button type="button" class="btn w-100 py-2 btn-success">
+                                  Unduh
+                                </button>
+                              </a>
+                            </div>
+                          </div>
+                          {{-- Modal Body End --}}
+                        </div>
+                      </div>
+                    </div>
+                    {{-- Modal Bukti Pembayaran End --}}
                   </tr>
                 @endforeach
               @endif
