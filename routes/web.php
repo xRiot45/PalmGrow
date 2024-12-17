@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\KebunController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProduksiController;
@@ -27,7 +28,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Dashboard Route
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
-    // Pengguna Route
+    // Pengguna (Admin)
     Route::prefix('/admin/pengguna')->group(function () {
         Route::get('/', [PenggunaController::class, 'index'])->name('admin.pengguna.index');
         Route::get('/tambah-pengguna', [PenggunaController::class, 'create'])->name('admin.pengguna.create');
@@ -37,7 +38,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::delete('/{id}', [PenggunaController::class, 'destroy'])->name('admin.pengguna.destroy');
     });
 
-    // Kebun
+    // Kebun (Admin)
     Route::prefix('/admin/kebun')->group(function () {
         Route::get('/', [KebunController::class, 'index'])->name('admin.kebun.index');
         Route::get('/tambah-kebun', [KebunController::class, 'create'])->name('admin.kebun.create');
@@ -47,7 +48,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::delete('/{id}', [KebunController::class, 'destroy'])->name('admin.kebun.destroy');
     });
 
-    // Petugas
+    // Petugas (Admin)
     Route::prefix('/admin/petugas')->group(function () {
         Route::get('/', [PetugasController::class, 'index'])->name('admin.petugas.index');
         Route::get('/tambah-petugas', [PetugasController::class, 'create'])->name('admin.petugas.create');
@@ -57,7 +58,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::delete('/{id}', [PetugasController::class, 'destroy'])->name('admin.petugas.destroy');
     });
 
-    // Produksi
+    // Produksi (Admin)
     Route::prefix('/admin/produksi')->group(function () {
         Route::get('/', [ProduksiController::class, 'index'])->name('admin.produksi.index');
         Route::get('/tambah-produksi', [ProduksiController::class, 'create'])->name('admin.produksi.create');
@@ -67,7 +68,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::delete('/{id}', [ProduksiController::class, 'destroy'])->name('admin.produksi.destroy');
     });
 
-    // Distribusi
+    // Distribusi (Admin)
     Route::prefix('/admin/distribusi')->group(function () {
         Route::get('/', [DistribusiController::class, 'index'])->name('admin.distribusi.index');
         Route::get('/tambah-distribusi', [DistribusiController::class, 'create'])->name('admin.distribusi.create');
@@ -77,7 +78,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::delete('/{id}', [DistribusiController::class, 'destroy'])->name('admin.distribusi.destroy');
     });
 
-    // Laporan
+    // Laporan (Admin)
     Route::prefix('/admin/laporan')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('admin.laporan.index');
         Route::get('/view-pdf/{id}', [LaporanController::class, 'view_pdf'])->name('admin.laporan.view_pdf');
@@ -87,6 +88,16 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::get('/edit-laporan/{id}', [LaporanController::class, 'edit'])->name('admin.laporan.edit');
         Route::put('/edit-laporan/{id}', [LaporanController::class, 'update'])->name('admin.laporan.update');
         Route::delete('/{id}', [LaporanController::class, 'destroy'])->name('admin.laporan.destroy');
+    });
+
+    // Pembayaran (Admin)
+    Route::prefix('/admin/pembayaran')->group(function () {
+        Route::get('/', [PembayaranController::class, 'index'])->name('admin.pembayaran.index');
+        Route::get('/tambah-pembayaran', [PembayaranController::class, 'create'])->name('admin.pembayaran.create');
+        Route::post('/tambah-pembayaran', [PembayaranController::class, 'store'])->name('admin.pembayaran.store');
+        Route::get('/edit-pembayaran/{id}', [PembayaranController::class, 'edit'])->name('admin.pembayaran.edit');
+        Route::put('/edit-pembayaran/{id}', [PembayaranController::class, 'update'])->name('admin.pembayaran.update');
+        Route::delete('/{id}', [PembayaranController::class, 'destroy'])->name('admin.pembayaran.destroy');
     });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');

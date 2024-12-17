@@ -96,6 +96,16 @@
         </a>
       </li>
 
+      {{-- Pembayaran --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.pembayaran.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="tdesign:undertake-transaction-filled"></iconify-icon>
+          </span>
+          <span class="nav-text"> Pembayaran </span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse"
           role="button" aria-expanded="false" aria-controls="sidebarProducts">
