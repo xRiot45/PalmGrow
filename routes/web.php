@@ -93,7 +93,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Pembayaran (Admin)
     Route::prefix('/admin/pembayaran')->group(function () {
         Route::get('/', [PembayaranController::class, 'index'])->name('admin.pembayaran.index');
-        Route::get('/view-file/{id}', [PembayaranController::class, 'view_file'])->name('admin.pembayaran.view_file');
+        // Route::get('/view-file/{id}', [PembayaranController::class, 'view_file'])->name('admin.pembayaran.view_file');
         Route::get('/download-file/{id}', [PembayaranController::class, 'download_file'])->name('admin.pembayaran.download_file');
         Route::get('/tambah-pembayaran', [PembayaranController::class, 'create'])->name('admin.pembayaran.create');
         Route::post('/tambah-pembayaran', [PembayaranController::class, 'store'])->name('admin.pembayaran.store');

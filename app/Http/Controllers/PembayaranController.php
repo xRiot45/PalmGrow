@@ -12,6 +12,12 @@ use Illuminate\View\View;
 
 class PembayaranController extends Controller
 {
+    /**
+     * Fungsi untuk mengaplikasikan filter pada daftar data pembayaran
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
     private function applyFilters(Builder $query, Request $request)
     {
         $filters = $request->only(['lokasi_produksi_kebun', 'jumlah_pembayaran_mulai', 'jumlah_pembayaran_selesai', 'metode_pembayaran', 'tanggal_pembayaran_mulai', 'tanggal_pembayaran_selesai']);
@@ -73,7 +79,7 @@ class PembayaranController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validate = $request->validate(
+        $request->validate(
             [
                 'produksi_id' => 'required',
                 'jumlah_pembayaran' => 'required|integer',
@@ -114,27 +120,63 @@ class PembayaranController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Fungsi untuk menampilkan form edit data pembayaran
+     * @param mixed $id
+     * @return \Illuminate\View\View
      */
-    public function show(Pembayaran $pembayaran)
+    public function edit($id): View
     {
-        //
+        $pembayaran = Pembayaran::find($id);
+        $produksi = Produksi::select('id', 'kebun_id')->get();
+        return view('pages.admin.pembayaran.edit', [
+            'data' => $pembayaran,
+            'produksi' => $produksi,
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Fungsi untuk mengupdate data pembayaran
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit(Pembayaran $pembayaran)
+    public function update(Request $request, $id): RedirectResponse
     {
-        //
-    }
+        $data = Pembayaran::findOrFail($id);
+        $request->validate(
+            [
+                'produksi_id' => 'required',
+                'jumlah_pembayaran' => 'required|integer',
+                'tanggal_pembayaran' => 'required',
+                'metode_pembayaran' => 'required|string',
+                'bukti_pembayaran' => 'nullable|mimes:png,jpg,jpeg|max:2048',
+            ],
+            [
+                'produksi_id.required' => 'Produksi Harus Dipilih',
+                'jumlah_pembayaran.required' => 'Jumlah pembayaran harus diisi',
+                'jumlah_pembayaran.integer' => 'Jumlah pembayaran harus berupa angka',
+                'tanggal_pembayaran.required' => 'Tanggal pembayaran harus diisi',
+                'metode_pembayaran.required' => 'Metode pembayaran harus diisi',
+                'metode_pembayaran.string' => 'Metode pembayaran harus berupa string',
+                'bukti_pembayaran.mimes' => 'Bukti pembayaran harus berupa png, jpg, atau jpeg',
+                'bukti_pembayaran.max' => 'Bukti pembayaran tidak boleh lebih dari 2MB',
+            ],
+        );
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pembayaran $pembayaran)
-    {
-        //
+        if ($request->hasFile('bukti_pembayaran')) {
+            if ($data->bukti_pembayaran && Storage::exists('public/pembayaran/' . basename($data->bukti_pembayaran))) {
+                Storage::delete('public/pembayaran/' . basename($data->bukti_pembayaran));
+            }
+
+            $file = $request->file('bukti_pembayaran');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $buktiPembayaran = $file->storeAs('public/pembayaran', $filename);
+
+            $data->bukti_pembayaran = $buktiPembayaran;
+        }
+
+        $data->update($request->except('bukti_pembayaran'));
+        return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil diupdate');
     }
 
     /**
@@ -160,10 +202,10 @@ class PembayaranController extends Controller
         return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran tidak ditemukan');
     }
 
-    public function view_file()
-    {
-        //
-    }
+    // public function view_file($id)
+    // {
+    //     $pembayaran = Pembayaran::find($id);
+    // }
 
     public function download_file()
     {
