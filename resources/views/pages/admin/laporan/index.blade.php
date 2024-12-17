@@ -156,7 +156,7 @@
                           class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-soft-success">
                           <iconify-icon icon="material-symbols:download"
                             class="align-middle fs-18"></iconify-icon>
-                          Download
+                          Unduh
                         </button>
                       </a>
                     </td>
