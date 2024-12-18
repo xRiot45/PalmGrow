@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistribusiController;
+use App\Http\Controllers\KategoriPanenController;
 use App\Http\Controllers\KebunController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PembayaranController;
@@ -93,13 +94,22 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Pembayaran (Admin)
     Route::prefix('/admin/pembayaran')->group(function () {
         Route::get('/', [PembayaranController::class, 'index'])->name('admin.pembayaran.index');
-        // Route::get('/view-file/{id}', [PembayaranController::class, 'view_file'])->name('admin.pembayaran.view_file');
         Route::get('/download-file/{id}', [PembayaranController::class, 'download_file'])->name('admin.pembayaran.download_file');
         Route::get('/tambah-pembayaran', [PembayaranController::class, 'create'])->name('admin.pembayaran.create');
         Route::post('/tambah-pembayaran', [PembayaranController::class, 'store'])->name('admin.pembayaran.store');
         Route::get('/edit-pembayaran/{id}', [PembayaranController::class, 'edit'])->name('admin.pembayaran.edit');
         Route::put('/edit-pembayaran/{id}', [PembayaranController::class, 'update'])->name('admin.pembayaran.update');
         Route::delete('/{id}', [PembayaranController::class, 'destroy'])->name('admin.pembayaran.destroy');
+    });
+
+    // Kategori Panen (Admin)
+    Route::prefix('/admin/kategori-panen')->group(function () {
+        Route::get('/', [KategoriPanenController::class, 'index'])->name('admin.kategori-panen.index');
+        Route::get('/tambah-kategori-panen', [KategoriPanenController::class, 'create'])->name('admin.kategori-panen.create');
+        Route::post('/tambah-kategori-panen', [KategoriPanenController::class, 'store'])->name('admin.kategori-panen.store');
+        Route::get('/edit-kategori-panen/{id}', [KategoriPanenController::class, 'edit'])->name('admin.kategori-panen.edit');
+        Route::put('/edit-kategori-panen/{id}', [KategoriPanenController::class, 'update'])->name('admin.kategori-panen.update');
+        Route::delete('/{id}', [KategoriPanenController::class, 'destroy'])->name('admin.kategori-panen.destroy');
     });
 
     Route::get('', [RoutingController::class, 'index'])->name('root');
