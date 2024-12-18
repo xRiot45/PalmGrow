@@ -27,7 +27,18 @@ class LoginController extends Controller
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/admin/dashboard')->with('success', 'Login Berhasil');
+            $pengguna = Auth::user();
+            switch ($pengguna->role->value) {
+
+                case 'Admin':
+                    return redirect()->route('admin.dashboard.index')->with('success', 'Login Berhasil');
+                case 'Petugas Kebun':
+                    return redirect()->route('petugas.index')->with('success', 'Login Berhasil');
+                case 'Manajer':
+                    return redirect()->route('manajer.index')->with('success', 'Login Berhasil');
+                default:
+                    break;
+            }
         } else {
             RateLimiter::hit($this->throttleKey($request));
             return redirect()->back()->with('error', 'Email atau Password Salah');

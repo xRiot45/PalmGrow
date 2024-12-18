@@ -159,10 +159,10 @@
                           </iconify-icon>
                         </a>
                         <button type="button" class="btn btn-soft-danger btn-sm"
-                          data-bs-toggle="modal" data-bs-target="#hapusDataModal">
+                          data-bs-toggle="modal" data-bs-target="#hapusDataModal"
+                          data-id="{{ $pengguna->id }}">
                           <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
-                            class="align-middle fs-18">
-                          </iconify-icon>
+                            class="align-middle fs-18"></iconify-icon>
                         </button>
                       </div>
                     </td>
@@ -172,10 +172,9 @@
                       aria-labelledby="hapusDataModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                          {{-- Modal Body Start --}}
                           <div class="modal-body">
-                            <form action="{{ route('admin.pengguna.destroy', $pengguna->id) }}"
-                              method="POST">
+                            <form id="hapusForm"
+                              action="{{ route('admin.pengguna.destroy', ':id') }}" method="POST">
                               @csrf
                               @method('DELETE')
 
@@ -183,12 +182,10 @@
                                 <img src="/images/delete.png" alt="Not Found Img"
                                   class="w-100 h-100">
                                 <h4 class="fw-bold">Hapus Data Pengguna</h4>
-                                <p class="text-muted">
-                                  Anda yakin ingin menghapus data pengguna ini?
+                                <p class="text-muted">Anda yakin ingin menghapus data pengguna ini?
                                 </p>
                               </div>
 
-                              {{-- Button Submit --}}
                               <div class="w-100 d-flex gap-2 justify-content-center mt-3">
                                 <button type="button" class="btn btn-secondary w-100 py-2"
                                   data-bs-dismiss="modal">Tutup</button>
@@ -197,10 +194,10 @@
                               </div>
                             </form>
                           </div>
-                          {{-- Modal Body End --}}
                         </div>
                       </div>
                     </div>
+
 
                     {{-- Modal Hapus Data End --}}
                   </tr>
@@ -253,4 +250,25 @@
     </div>
   </div>
 
+
+
 @endsection
+
+@push('js')
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var hapusButtons = document.querySelectorAll('[data-bs-toggle="modal"]');
+
+      hapusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          var penggunaId = this.getAttribute('data-id');
+
+
+          var formAction = document.getElementById('hapusForm').action;
+          document.getElementById('hapusForm').action = formAction.replace(':id',
+            penggunaId);
+        });
+      });
+    });
+  </script>
+@endpush

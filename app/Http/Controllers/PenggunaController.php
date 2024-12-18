@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\Role;
 use App\Models\Pengguna;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
 class PenggunaController extends Controller
@@ -117,9 +117,13 @@ class PenggunaController extends Controller
     /**
      * Fungsi untuk menghapus data pengguna
      */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         $pengguna = Pengguna::findOrFail($id);
+        if ($pengguna->role->value === 'Admin') {
+            return redirect()->route('admin.pengguna.index')->with('error', 'Tidak dapat menghapus akun admin');
+        }
+
         $pengguna->delete();
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus');
     }
