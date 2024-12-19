@@ -4,7 +4,6 @@
   @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
 @endsection
 
-
 @section('content')
   <div class="row">
     <div class="col-xl-12">
@@ -216,7 +215,6 @@
                         </div>
                       </div>
                     </div>
-
                     {{-- Modal Hapus Data End --}}
                   </tr>
                 @endforeach
@@ -232,7 +230,7 @@
           <nav aria-label="Page navigation example"
             class="d-lg-flex justify-content-lg-between align-items-center text-center">
             <div class="d-flex flex-wrap gap-2 justify-content-center mb-lg-0 mb-3">
-              <form action="{{ route('admin.kebun.index') }}" method="POST"
+              <form action="{{ route('admin.petugas.index') }}" method="POST"
                 class="d-flex align-items-center gap-2 justify-content-center flex-wrap">
                 @csrf
                 @method('GET')
@@ -309,7 +307,6 @@
                 </li>
               @endif
             </ul>
-
           </nav>
         </div>
         {{-- Pagination End --}}

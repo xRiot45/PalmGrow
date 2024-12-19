@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProduksiRequest;
 use App\Models\Kebun;
 use App\Models\Produksi;
 use Illuminate\Contracts\View\View;
@@ -12,25 +13,10 @@ use Illuminate\Http\Request;
 
 class ProduksiController extends Controller
 {
-    /**
-     * Fungsi untuk menerapkan fitur filter
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \Illuminate\Http\Request $request
-     * @return void
-     */
+
     protected function applyFilters(Builder $query, Request $request)
     {
-        $filters = $request->only([
-            'lokasi_kebun',
-            'luas_kebun_mulai',
-            'luas_kebun_selesai',
-            'jumlah_tandan_mulai',
-            'jumlah_tandan_selesai',
-            'berat_total_mulai',
-            'berat_total_selesai',
-            'tanggal_produksi_mulai',
-            'tanggal_produksi_selesai'
-        ]);
+        $filters = $request->only(['lokasi_kebun', 'luas_kebun_mulai', 'luas_kebun_selesai', 'jumlah_tandan_mulai', 'jumlah_tandan_selesai', 'berat_total_mulai', 'berat_total_selesai', 'tanggal_produksi_mulai', 'tanggal_produksi_selesai']);
 
         foreach ($filters as $filterName => $filterValue) {
             if (!empty($filterValue)) {
@@ -55,119 +41,75 @@ class ProduksiController extends Controller
         }
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman produksi, menerapkan fitur filter, menerapkan fitur pagination dan mengirimkan data lokasi kebun berdasarkan id kebun
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function index(): View
+
+    public function index(Request $request): View
     {
-        $per_page = request()->input('per_page', 10);
+        $perPage = $request->input('perPage', 10);
         $query = Produksi::query()->orderBy('created_at', 'desc');
 
         $this->applyFilters($query, request());
 
-        $produksi = $query->paginate($per_page)->withQueryString();
+        $produksi = $query->paginate($perPage)->appends($request->except('page'));
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
 
         return view('pages.admin.produksi.index', [
             'data' => $produksi->items(),
             'pagination' => $produksi,
-            'lokasi_kebun' => $lokasi_kebun
+            'lokasi_kebun' => $lokasi_kebun,
+            'perPage' => $perPage,
         ]);
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman tambah produksi & mengirimkan data lokasi kebun
-     * @return \Illuminate\Contracts\View\View
-     */
+
     public function create(): View
     {
         $lokasi_kebun = Kebun::select('id', 'lokasi')->where('status', 'Aktif')->get();
         return view('pages.admin.produksi.create', [
-            'lokasi_kebun' => $lokasi_kebun
+            'lokasi_kebun' => $lokasi_kebun,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $validate = $request->validate([
-            'kebun_id' => 'required',
-            'jumlah_tandan' => 'required|integer',
-            'berat_total' => 'required|integer',
-            'tanggal_produksi' => 'required'
-        ], [
-            'kebun_id.required' => 'Kebun Harus Dipilih',
-            'jumlah_tandan.required' => 'Jumlah tandan harus diisi',
-            'jumlah_tandan.integer' => 'Jumlah tandan harus berupa angka',
-            'berat_total.required' => 'Berat total harus diisi',
-            'berat_total.integer' => 'Berat total harus berupa angka',
-            'tanggal_produksi.required' => 'Tanggal panen harus diisi'
-        ]);
 
-        Produksi::create($validate);
+    public function store(ProduksiRequest $request): RedirectResponse
+    {
+        $produksi = Produksi::create($request->validated());
+        if ($produksi) {
+            return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil ditambahkan');
+        }
+
         return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil ditambahkan');
     }
 
 
-    /**
-     * Fungsi untuk menampilkan halaman edit produksi & mengirimkan data lokasi kebun dan data produksi berdasarkan id
-     * @param mixed $id
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit($id): View
+    public function edit(int $id): View
     {
         $produksi = Produksi::with('kebun')->findOrFail($id);
         $lokasi_kebun = Kebun::select('id', 'lokasi')->where('status', 'Aktif')->get();
         return view('pages.admin.produksi.edit', [
             'data' => $produksi,
-            'lokasi_kebun' => $lokasi_kebun
+            'lokasi_kebun' => $lokasi_kebun,
         ]);
     }
 
-    /**
-     * Fungsi untuk mengupdate data produksi
-     * @param \Illuminate\Http\Request $request
-     * @param mixed $id
-     * @return RedirectResponse
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'kebun_id' => 'required',
-            'jumlah_tandan' => 'required|integer',
-            'berat_total' => 'required|integer',
-            'tanggal_produksi' => 'required'
-        ], [
-            'kebun_id.required' => 'Kebun Harus Dipilih',
-            'jumlah_tandan.required' => 'Jumlah tandan harus diisi',
-            'jumlah_tandan.integer' => 'Jumlah tandan harus berupa angka',
-            'berat_total.required' => 'Berat total harus diisi',
-            'berat_total.integer' => 'Berat total harus berupa angka',
-            'tanggal_produksi.required' => 'Tanggal panen harus diisi'
-        ]);
 
+    public function update(ProduksiRequest $request, int $id): RedirectResponse
+    {
         $produksi = Produksi::findOrFail($id);
-        $produksi->update($request->only([
-            'kebun_id',
-            'jumlah_tandan',
-            'berat_total',
-            'tanggal_produksi'
-        ]));
-        return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil diperbarui');
+        if ($produksi->update($request->validated())) {
+            return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil diperbarui');
+        }
+
+        return redirect()->route('admin.produksi.index')->with('error', 'Produksi gagal diperbarui');
     }
 
-    /**
-     * Fungsi untuk menghapus data produksi
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($id): RedirectResponse
+
+    public function destroy(int $id): RedirectResponse
     {
         $produksi = Produksi::findOrFail($id);
-        $produksi->delete();
-        return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil dihapus');
+        if ($produksi->delete()) {
+            return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil dihapus');
+        }
+
+        return redirect()->route('admin.produksi.index')->with('error', 'Produksi gagal dihapus');
     }
 }
