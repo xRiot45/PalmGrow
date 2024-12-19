@@ -137,6 +137,7 @@
                 <th>Status</th>
                 <th>Tanggal Tanam</th>
                 <th>Tanggal Panen</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             {{-- Table Head End --}}
