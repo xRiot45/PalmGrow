@@ -11,15 +11,19 @@
               <div class="d-flex flex-column h-100 justify-content-center">
 
                 <div class="auth-logo mb-4">
-                  <img src="/images/logo-dark.png" height="24" alt="logo dark">
+                  <a class="logo-dark">
+                    <img src="/images/logo-dark.png" height="24" alt="logo dark">
+                  </a>
 
-                  <img src="/images/logo-light.png" height="24" alt="logo light">
+                  <a class="logo-light">
+                    <img src="/images/logo-light.png" height="24" alt="logo light">
+                  </a>
                 </div>
 
                 <h2 class="fw-bold fs-24">Login</h2>
 
                 <p class="text-muted mt-1 mb-4">Masukkan alamat email dan kata sandi Anda untuk
-                  mengakses panel admin.</p>
+                  mengakses panel anda.</p>
 
                 <div class="mb-4">
                   <form method="POST" action="{{ route('login') }}" class="authentication-form">
@@ -68,7 +72,8 @@
         <div class="col-xxl-5 d-none d-xxl-flex">
           <div class="card h-100 mb-0 overflow-hidden">
             <div class="d-flex flex-column h-100">
-              <img src="/images/small/img-10.jpg" alt="" class="w-100 h-100">
+              <img src="/images/background.jpg" alt="" class="w-100 h-100"
+                style="object-fit: cover;">
             </div>
           </div>
         </div>

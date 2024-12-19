@@ -63,19 +63,6 @@
                     </div>
                     {{-- Password End --}}
 
-                    {{-- Password Confirmation Start --}}
-                    {{-- <div class="mb-3">
-                      <label class="form-label" for="password_confirmation">Password
-                        Confirmation</label>
-                      <input type="password" id="password_confirmation" name="password_confirmation"
-                        class="form-control" placeholder="Enter your password confirmation">
-                      @error('password_confirmation')
-                        <div class="text-danger">{{ $message }}</div>
-                      @enderror
-                    </div> --}}
-                    {{-- Password Confirmation End --}}
-
-
                     {{-- Role Start --}}
                     <div class="mb-3">
                       <label class="form-label" for="role">Role</label>
@@ -83,9 +70,6 @@
                         aria-label="Pilih Role" data-choices data-choices-search-false
                         data-choices-removeItem>
                         <option value="">-- Pilih Role --</option>
-                        <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>
-                          Admin
-                        </option>
                         <option value="Petugas Kebun"
                           {{ old('role') == 'Petugas Kebun' ? 'selected' : '' }}>
                           Petugas Kebun
@@ -121,7 +105,8 @@
         <div class="col-xxl-5 d-none d-xxl-flex">
           <div class="card h-100 mb-0 overflow-hidden">
             <div class="d-flex flex-column h-100">
-              <img src="/images/small/img-10.jpg" alt="" class="w-100 h-100">
+              <img src="/images/background.jpg" alt="" class="w-100 h-100"
+                style="object-fit: cover;">
             </div>
           </div>
         </div>
