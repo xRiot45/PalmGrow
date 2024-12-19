@@ -54,8 +54,8 @@ class PetugasController extends Controller
 
     public function store(PetugasRequest $request): RedirectResponse
     {
-        $petugas = Petugas::create($request->validated());
-        if ($petugas) {
+        $tambah_data = Petugas::create($request->validated());
+        if ($tambah_data) {
             return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil ditambahkan');
         }
 
@@ -75,8 +75,8 @@ class PetugasController extends Controller
 
     public function update(PetugasRequest $request, int $id): RedirectResponse
     {
-        $petugas = Petugas::findOrFail($id);
-        if ($petugas->update($request->validated())) {
+        $update_data = Petugas::findOrFail($id);
+        if ($update_data->update($request->validated())) {
             return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil diperbarui');
         }
 
@@ -86,7 +86,8 @@ class PetugasController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $petugas = Petugas::findOrFail($id);
-        if ($petugas->delete()) {
+        $hapus_data = $petugas->delete();
+        if ($hapus_data) {
             return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil dihapus');
         }
 

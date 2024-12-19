@@ -72,7 +72,7 @@ class PembayaranController extends Controller
             return redirect()->back()->with('error', 'File tidak ditemukan atau tidak valid');
         }
 
-        $buat_pembayaran = Pembayaran::create([
+        $tambah_data = Pembayaran::create([
             'produksi_id' => $request->produksi_id,
             'jumlah_pembayaran' => $request->jumlah_pembayaran,
             'tanggal_pembayaran' => $request->tanggal_pembayaran,
@@ -80,7 +80,7 @@ class PembayaranController extends Controller
             'bukti_pembayaran' => 'public/pembayaran/' . $filename,
         ]);
 
-        if ($buat_pembayaran) {
+        if ($tambah_data) {
             return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil ditambahkan');
         }
 
@@ -112,8 +112,8 @@ class PembayaranController extends Controller
             $data->bukti_pembayaran = $buktiPembayaran;
         }
 
-        $update_pembayaran = $data->update($request->except('bukti_pembayaran'));
-        if ($update_pembayaran) {
+        $update_data = $data->update($request->except('bukti_pembayaran'));
+        if ($update_data) {
             return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil diupdate');
         }
 
@@ -130,8 +130,8 @@ class PembayaranController extends Controller
                 Storage::delete($bukti_pembayaran);
             }
 
-            $hapus_pembayaran = $pembayaran->delete();
-            if ($hapus_pembayaran) {
+            $hapus_data = $pembayaran->delete();
+            if ($hapus_data) {
                 return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil dihapus');
             }
 

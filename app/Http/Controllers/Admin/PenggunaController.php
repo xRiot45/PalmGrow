@@ -54,14 +54,14 @@ class PenggunaController extends Controller
             return redirect()->back()->with('error', 'Email sudah terdaftar');
         }
 
-        $pengguna = Pengguna::create([
+        $tambah_data = Pengguna::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make('password'),
             'role' => $request->role,
         ]);
 
-        if ($pengguna) {
+        if ($tambah_data) {
             return redirect()->route('admin.pengguna.index')->with('success', 'Berhasil menambahkan pengguna');
         }
 
@@ -83,7 +83,8 @@ class PenggunaController extends Controller
             return redirect()->back()->with('error', 'Email sudah terdaftar');
         }
 
-        if ($pengguna->update($request->validated())) {
+        $update_data = $pengguna->update($request->validated());
+        if ($update_data) {
             return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate');
         }
 
@@ -97,7 +98,8 @@ class PenggunaController extends Controller
             return redirect()->route('admin.pengguna.index')->with('error', 'Tidak dapat menghapus akun admin');
         }
 
-        if ($user->delete()) {
+        $hapus_data = $user->delete();
+        if ($hapus_data) {
             return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus');
         }
 

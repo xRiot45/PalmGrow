@@ -51,8 +51,8 @@ class KebunController extends Controller
 
     public function store(KebunRequest $request): RedirectResponse
     {
-        $kebun = Kebun::create($request->validated());
-        if ($kebun) {
+        $tambah_data = Kebun::create($request->validated());
+        if ($tambah_data) {
             return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil ditambahkan');
         }
 
@@ -70,7 +70,8 @@ class KebunController extends Controller
     public function update(KebunRequest $request, $id): RedirectResponse
     {
         $kebun = Kebun::findOrFail($id);
-        if ($kebun->update($request->validated())) {
+        $update_data = $kebun->update($request->validated());
+        if ($update_data) {
             return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil diperbarui');
         }
 
@@ -80,7 +81,8 @@ class KebunController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $kebun = Kebun::findOrFail($id);
-        if ($kebun->delete()) {
+        $hapus_data = $kebun->delete();
+        if ($hapus_data) {
             return redirect()->route('admin.kebun.index')->with('error', 'Kebun gagal dihapus');
         }
 

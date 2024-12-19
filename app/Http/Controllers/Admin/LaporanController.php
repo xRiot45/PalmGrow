@@ -67,14 +67,14 @@ class LaporanController extends Controller
             return redirect()->back()->with('error', 'File tidak ditemukan atau tidak valid');
         }
 
-        $buat_laporan = Laporan::create([
+        $tambah_data = Laporan::create([
             'kebun_id' => $request->kebun_id,
             'file_type' => $filename,
             'file_path' => 'public/laporan/' . $filename,
             'tanggal_laporan' => $request->tanggal_laporan,
         ]);
 
-        if ($buat_laporan) {
+        if ($tambah_data) {
             return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan');
         }
 
@@ -107,9 +107,9 @@ class LaporanController extends Controller
             $data->file_path = $filePath;
         }
 
-        $update_laporan = $data->update($request->except('file_path'));
+        $update_data = $data->update($request->except('file_path'));
 
-        if ($update_laporan) {
+        if ($update_data) {
             return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui');
         }
 
@@ -125,8 +125,8 @@ class LaporanController extends Controller
                 Storage::delete($file_path);
             }
 
-            $hapus_laporan = $laporan->delete();
-            if ($hapus_laporan) {
+            $hapus_data = $laporan->delete();
+            if ($hapus_data) {
                 return redirect()->route('admin.laporan.index')->with('success', 'Laporan beserta file berhasil dihapus');
             }
 

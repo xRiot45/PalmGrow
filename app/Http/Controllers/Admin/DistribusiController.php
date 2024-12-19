@@ -71,7 +71,8 @@ class DistribusiController extends Controller
         $produksi->decrement('jumlah_tandan', $request->jumlah);
         $produksi->save();
 
-        if (Distribusi::create($request->validated())) {
+        $tambah_data = Distribusi::create($request->validated());
+        if ($tambah_data) {
             return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil ditambahkan');
         }
 
@@ -104,7 +105,8 @@ class DistribusiController extends Controller
         $produksi->decrement('jumlah_tandan', $request->jumlah - $jumlahSebelumnya);
         $produksi->save();
 
-        if ($distribusi->update($request->validated())) {
+        $update_data = $distribusi->update($request->validated());
+        if ($update_data) {
             return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil diupdate');
         }
 
@@ -114,7 +116,8 @@ class DistribusiController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $distribusi = Distribusi::find($id);
-        if ($distribusi->delete()) {
+        $hapus_data = $distribusi->delete();
+        if ($hapus_data) {
             return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil dihapus');
         }
 

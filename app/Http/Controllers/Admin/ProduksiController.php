@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 
 class ProduksiController extends Controller
 {
-
     protected function applyFilters(Builder $query, Request $request)
     {
         $filters = $request->only(['lokasi_kebun', 'luas_kebun_mulai', 'luas_kebun_selesai', 'jumlah_tandan_mulai', 'jumlah_tandan_selesai', 'berat_total_mulai', 'berat_total_selesai', 'tanggal_produksi_mulai', 'tanggal_produksi_selesai']);
@@ -41,7 +40,6 @@ class ProduksiController extends Controller
         }
     }
 
-
     public function index(Request $request): View
     {
         $perPage = $request->input('perPage', 10);
@@ -60,7 +58,6 @@ class ProduksiController extends Controller
         ]);
     }
 
-
     public function create(): View
     {
         $lokasi_kebun = Kebun::select('id', 'lokasi')->where('status', 'Aktif')->get();
@@ -69,17 +66,15 @@ class ProduksiController extends Controller
         ]);
     }
 
-
     public function store(ProduksiRequest $request): RedirectResponse
     {
-        $produksi = Produksi::create($request->validated());
-        if ($produksi) {
+        $tambah_data = Produksi::create($request->validated());
+        if ($tambah_data) {
             return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil ditambahkan');
         }
 
         return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil ditambahkan');
     }
-
 
     public function edit(int $id): View
     {
@@ -91,22 +86,21 @@ class ProduksiController extends Controller
         ]);
     }
 
-
     public function update(ProduksiRequest $request, int $id): RedirectResponse
     {
-        $produksi = Produksi::findOrFail($id);
-        if ($produksi->update($request->validated())) {
+        $update_data = Produksi::findOrFail($id);
+        if ($update_data->update($request->validated())) {
             return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil diperbarui');
         }
 
         return redirect()->route('admin.produksi.index')->with('error', 'Produksi gagal diperbarui');
     }
 
-
     public function destroy(int $id): RedirectResponse
     {
         $produksi = Produksi::findOrFail($id);
-        if ($produksi->delete()) {
+        $hapus_data = $produksi->delete();
+        if ($hapus_data) {
             return redirect()->route('admin.produksi.index')->with('success', 'Produksi berhasil dihapus');
         }
 
