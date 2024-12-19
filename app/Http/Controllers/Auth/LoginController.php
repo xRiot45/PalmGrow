@@ -33,7 +33,7 @@ class LoginController extends Controller
                 case 'Admin':
                     return redirect()->route('admin.dashboard.index')->with('success', 'Login Berhasil');
                 case 'Petugas Kebun':
-                    return redirect()->route('petugas.index')->with('success', 'Login Berhasil');
+                    return redirect()->route('petugas.dashboard.index')->with('success', 'Login Berhasil');
                 case 'Manajer':
                     return redirect()->route('manajer.index')->with('success', 'Login Berhasil');
                 default:

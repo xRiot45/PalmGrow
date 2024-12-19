@@ -10,5 +10,8 @@ class Kernel extends HttpKernel
         'role' => [
             \App\Http\Middleware\RoleMiddleware::class,
         ],
+        'auth' => [
+            \App\Http\Middleware\AuthMiddleware::class,
+        ],
     ];
 }
