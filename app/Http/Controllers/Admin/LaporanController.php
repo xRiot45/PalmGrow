@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LaporanRequest;
 use App\Models\Kebun;
 use App\Models\Laporan;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,11 +11,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use Spatie\LaravelPdf\Facades\Pdf;
 
 class LaporanController extends Controller
 {
-    private function applyFilters(Builder $query, Request $request)
+    private function applyFilters(Builder $query, Request $request): void
     {
         $filters = $request->only(['lokasi_kebun', 'tanggal_laporan_mulai', 'tanggal_laporan_selesai']);
 
@@ -68,23 +68,8 @@ class LaporanController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(LaporanRequest $request): RedirectResponse
     {
-        $request->validate(
-            [
-                'kebun_id' => 'required',
-                'file_path' => 'required|mimes:pdf|max:2048',
-                'tanggal_laporan' => 'required',
-            ],
-            [
-                'kebun_id.required' => 'Kebun Harus Dipilih',
-                'file_path.required' => 'File harus diisi',
-                'file_path.mimes' => 'File harus berupa pdf',
-                'file_path.max' => 'File tidak boleh lebih dari 2MB',
-                'tanggal_laporan.required' => 'Tanggal laporan harus diisi',
-            ],
-        );
-
         if ($request->hasFile('file_path') && $request->file('file_path')->isValid()) {
             $file = $request->file('file_path');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -125,24 +110,9 @@ class LaporanController extends Controller
      * @param mixed $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(LaporanRequest $request, $id): RedirectResponse
     {
         $data = Laporan::findOrFail($id);
-        $request->validate(
-            [
-                'kebun_id' => 'required',
-                'file_path' => 'required|mimes:pdf|max:2048',
-                'tanggal_laporan' => 'required',
-            ],
-            [
-                'kebun_id.required' => 'Kebun Harus Dipilih',
-                'file_path.required' => 'File harus diisi',
-                'file_path.mimes' => 'File harus berupa pdf',
-                'file_path.max' => 'File tidak boleh lebih dari 2MB',
-                'tanggal_laporan.required' => 'Tanggal laporan harus diisi',
-            ],
-        );
-
         if ($request->hasFile('file_path')) {
             if ($data->file_path && Storage::exists('public/laporan/' . basename($data->file_path))) {
                 Storage::delete('public/laporan/' . basename($data->file_path));
@@ -169,13 +139,11 @@ class LaporanController extends Controller
         $laporan = Laporan::find($id);
         if ($laporan) {
             $file_path = $laporan->file_path;
-
             if (Storage::exists($file_path)) {
                 Storage::delete($file_path);
             }
 
             $laporan->delete();
-
             return redirect()->route('admin.laporan.index')->with('success', 'Laporan beserta file berhasil dihapus');
         }
 

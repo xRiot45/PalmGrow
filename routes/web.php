@@ -120,6 +120,13 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         // Laporan
         Route::prefix('/laporan')->group(function () {
             Route::get('/', [PetugasLaporanController::class, 'index'])->name('petugas.laporan.index');
+            Route::get('/view-pdf/{id}', [PetugasLaporanController::class, 'view_pdf'])->name('petugas.laporan.view_pdf');
+            Route::get('/download-pdf/{id}', [PetugasLaporanController::class, 'download_pdf'])->name('petugas.laporan.download_pdf');
+            Route::get('/tambah-laporan', [PetugasLaporanController::class, 'create'])->name('petugas.laporan.create');
+            Route::post('/tambah-laporan', [PetugasLaporanController::class, 'store'])->name('petugas.laporan.store');
+            Route::get('/edit-laporan/{id}', [PetugasLaporanController::class, 'edit'])->name('petugas.laporan.edit');
+            Route::put('/edit-laporan/{id}', [PetugasLaporanController::class, 'update'])->name('petugas.laporan.update');
+            Route::delete('/{id}', [PetugasLaporanController::class, 'destroy'])->name('petugas.laporan.destroy');
         });
     });
 });
