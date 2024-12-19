@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
 use App\Models\Produksi;
 use Illuminate\Database\Eloquent\Builder;

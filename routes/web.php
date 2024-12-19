@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DistribusiController;
-use App\Http\Controllers\KategoriPanenController;
-use App\Http\Controllers\KebunController;
-use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\PetugasController;
-use App\Http\Controllers\ProduksiController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DistribusiController;
+use App\Http\Controllers\Admin\KategoriPanenController;
+use App\Http\Controllers\Admin\KebunController;
+use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\PembayaranController;
+use App\Http\Controllers\Admin\PenggunaController;
+use App\Http\Controllers\Admin\PetugasController;
+use App\Http\Controllers\Admin\ProduksiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingController;
 use App\Http\Middleware\RoleMiddleware;
