@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class LaporanRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class LaporanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::user()?->role?->value === 'Admin' || Auth::user()?->role?->value === 'Petugas Kebun';
     }
 
     /**
@@ -44,11 +46,11 @@ class LaporanRequest extends FormRequest
     {
         return [
             'kebun_id.required' => 'Kebun harus dipilih',
-            'file_path.required' => 'File harus diunggah pada saat pembuatan laporan', // untuk POST
+            'file_path.required' => 'File harus diunggah pada saat pembuatan laporan',
             'file_path.mimes' => 'File harus berupa PDF',
             'file_path.max' => 'File tidak boleh lebih dari 2MB',
             'tanggal_laporan.required' => 'Tanggal laporan harus diisi',
-            'file_path.nullable' => 'File bersifat opsional saat mengupdate laporan', // untuk PUT
+            'file_path.nullable' => 'File bersifat opsional saat mengupdate laporan',
         ];
     }
 }
