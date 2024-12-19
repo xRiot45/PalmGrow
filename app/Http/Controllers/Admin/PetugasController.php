@@ -32,7 +32,7 @@ class PetugasController extends Controller
     public function index(Request $request): View
     {
         $perPage = $request->input('perPage', 10);
-        $query = Petugas::query()->orderBy('created_at', 'desc');
+        $query = Petugas::query()->orderByDesc('created_at');
 
         $this->applyFilters($query, $request);
 

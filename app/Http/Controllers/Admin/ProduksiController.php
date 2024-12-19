@@ -45,7 +45,7 @@ class ProduksiController extends Controller
     public function index(Request $request): View
     {
         $perPage = $request->input('perPage', 10);
-        $query = Produksi::query()->orderBy('created_at', 'desc');
+        $query = Produksi::query()->orderByDesc('created_at');
 
         $this->applyFilters($query, request());
 

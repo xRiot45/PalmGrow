@@ -30,7 +30,7 @@ class PenggunaController extends Controller
     public function index(Request $request): View
     {
         $perPage = $request->input('perPage', 10);
-        $query = Pengguna::query()->orderBy('created_at', 'desc');
+        $query = Pengguna::query()->orderByDesc('created_at');
 
         $this->applyFilters($query, $request);
 
