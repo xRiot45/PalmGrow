@@ -1,4 +1,4 @@
-@extends('layouts.auth', ['title' => 'Forbidden'])
+@extends('layouts.auth/app', ['title' => 'Forbidden'])
 
 @section('content')
   <div class="d-flex flex-column h-100 p-3">

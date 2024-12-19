@@ -1,5 +1,6 @@
 <?php
 
+// Import Admin Controller
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DistribusiController as AdminDistribusiController;
 use App\Http\Controllers\Admin\KategoriPanenController as AdminKategoriPanenController;
@@ -10,24 +11,17 @@ use App\Http\Controllers\Admin\PenggunaController as AdminPenggunaController;
 use App\Http\Controllers\Admin\PetugasController as AdminPetugasController;
 use App\Http\Controllers\Admin\ProduksiController as AdminProduksiController;
 
+// Import Petugas Controller
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
 use App\Http\Controllers\Petugas\LaporanController as PetugasLaporanController;
-use App\Http\Middleware\AuthMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 require __DIR__ . '/auth.php';
+
+Route::get('/', function () {
+    return view('pages.index');
+});
 
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Route Admin
