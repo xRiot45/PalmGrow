@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PetugasRequest;
 use App\Models\Pengguna;
 use App\Models\Petugas;
 use Carbon\Carbon;
@@ -14,7 +15,7 @@ use Illuminate\Http\Request;
 class PetugasController extends Controller
 {
     /**
-     * Fungsi untuk menerapkan fitur filter
+     * Fungsi untuk fitur filter
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param \Illuminate\Http\Request $request
      * @return void
@@ -36,21 +37,23 @@ class PetugasController extends Controller
     }
 
     /**
-     * Fungsi untuk menampilkan halaman petugas
+     * Fungsi untuk menampilkan halaman kebun yang disertai dengan fitur filter dan pagination
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request): View
     {
-        $per_page = $request->input('per_page', 10);
+        $perPage = $request->input('perPage', 10);
         $query = Petugas::query()->orderBy('created_at', 'desc');
 
         $this->applyFilters($query, $request);
 
-        $petugas = $query->paginate($per_page)->withQueryString();
+        $petugas = $query->paginate($perPage)->appends($request->except('page'));
 
         return view('pages.admin.petugas.index', [
             'data' => $petugas->items(),
             'pagination' => $petugas,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -60,7 +63,6 @@ class PetugasController extends Controller
      */
     public function create(): View
     {
-        // Ambil data pengguna yang tidak terdaftar sebagai petugas dengan syarat role adalah 'Petugas Kebun'
         $pengguna = Pengguna::whereDoesntHave('petugas')->where('role', 'Petugas Kebun')->get();
         return view('pages.admin.petugas.create', [
             'pengguna' => $pengguna,
@@ -69,30 +71,12 @@ class PetugasController extends Controller
 
     /**
      * Fungsi untuk menambahkan data petugas
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\PetugasRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(PetugasRequest $request): RedirectResponse
     {
-        $validate = $request->validate(
-            [
-                'pengguna_id' => 'required|unique:petugas,pengguna_id,null,id',
-                'nama_petugas' => 'required|string',
-                'jabatan' => 'required|string',
-                'tanggal_bergabung' => 'required',
-            ],
-            [
-                'pengguna_id.required' => 'Pengguna harus dipilih.',
-                'pengguna_id.unique' => 'Pengguna sudah dipilih.',
-                'nama_petugas.required' => 'Nama petugas harus diisi.',
-                'nama_petugas.string' => 'Nama petugas harus berupa teks.',
-                'jabatan.required' => 'Jabatan harus diisi.',
-                'jabatan.string' => 'Jabatan harus berupa teks.',
-                'tanggal_bergabung.required' => 'Tanggal bergabung harus diisi.',
-            ],
-        );
-
-        Petugas::create($validate);
+        Petugas::create($request->only(['pengguna_id', 'nama_petugas', 'jabatan', 'tanggal_bergabung']));
         return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil ditambahkan');
     }
 
@@ -114,29 +98,12 @@ class PetugasController extends Controller
 
     /**
      * Fungsi untuk mengupdate data petugas
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\PetugasRequest $request
      * @param mixed $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(PetugasRequest $request, $id): RedirectResponse
     {
-        $request->validate(
-            [
-                'pengguna_id' => 'required|unique:petugas,pengguna_id,' . $id . ',id',
-                'nama_petugas' => 'required|string',
-                'jabatan' => 'required|string',
-                'tanggal_bergabung' => 'required',
-            ],
-            [
-                'pengguna_id.required' => 'Pengguna harus dipilih.',
-                'nama_petugas.required' => 'Nama petugas harus diisi.',
-                'nama_petugas.string' => 'Nama petugas harus berupa teks.',
-                'jabatan.required' => 'Jabatan harus diisi.',
-                'jabatan.string' => 'Jabatan harus berupa teks.',
-                'tanggal_bergabung.required' => 'Tanggal bergabung harus diisi.',
-            ],
-        );
-
         $petugas = Petugas::findOrFail($id);
         $petugas->update($request->only(['pengguna_id', 'nama_petugas', 'jabatan', 'tanggal_bergabung']));
         return redirect()->route('admin.petugas.index')->with('success', 'Petugas berhasil diperbarui');

@@ -8,29 +8,28 @@
   <div class="row">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header d-lg-flex justify-content-between align-items-center gap-1">
+        <div class="card-header d-md-flex justify-content-between align-items-center gap-1">
           <h4 class="card-title flex-grow-1">Daftar Kebun</h4>
-          <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
+          <div class="d-md-flex flex-wrap gap-1 mt-md-0 mt-3">
             {{-- Button Tambah Kebun --}}
             <a href="{{ route('admin.kebun.create') }}"
-              class="btn btn-md btn-primary d-flex justify-content-between align-items-center gap-1">
+              class="btn btn-md btn-primary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="ic:baseline-plus" class="align-middle fs-18">
               </iconify-icon>
               Tambah Kebun
             </a>
 
             {{-- Button Modal --}}
-            <button type="button"
-              class="btn btn-md d-flex justify-content-between align-items-center btn-success d-flex justify-content-between align-items-center gap-1"
+            <a class="btn btn-md d-flex gap-1 justify-content-center align-items-center btn-success mb-md-0 mb-2"
               data-bs-toggle="modal" data-bs-target="#filterModal">
               <iconify-icon icon="mage:filter" class="align-middle fs-18">
               </iconify-icon>
               Filter
-            </button>
+            </a>
 
             {{-- Button Refresh Halaman --}}
             <a href="{{ route('admin.kebun.index') }}"
-              class="btn btn-md btn-secondary d-flex justify-content-between align-items-center gap-1">
+              class="btn btn-md btn-secondary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="ic:baseline-refresh" class="align-middle fs-18">
               </iconify-icon>
               Refresh
