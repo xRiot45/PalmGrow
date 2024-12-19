@@ -48,7 +48,9 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.produksi.index') }}" method="GET">
+                    <form action="{{ route('admin.produksi.index') }}" method="POST">
+                      @csrf
+                      @method('GET')
                       {{-- Lokasi Kebun --}}
                       <div class="mb-3">
                         <label class="form-label" for="lokasi_kebun">Lokasi Kebun</label>

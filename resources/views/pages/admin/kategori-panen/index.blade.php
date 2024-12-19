@@ -47,7 +47,9 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.kategori-panen.index') }}" method="GET">
+                    <form action="{{ route('admin.kategori-panen.index') }}" method="POST">
+                      @csrf
+                      @method('GET')
                       {{-- Input Nama Kategori --}}
                       <div class="mb-3">
                         <label class="form-label" for="nama_kategori">Nama Kategori</label>

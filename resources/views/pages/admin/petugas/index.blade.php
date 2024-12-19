@@ -48,7 +48,9 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.petugas.index') }}" method="GET">
+                    <form action="{{ route('admin.petugas.index') }}" method="POST">
+                      @csrf
+                      @method('GET')
                       {{-- Input Nama Petugas --}}
                       <div class="mb-3">
                         <label class="form-label" for="nama_petugas">Nama Petugas</label>

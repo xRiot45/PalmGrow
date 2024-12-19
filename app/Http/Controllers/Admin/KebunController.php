@@ -3,32 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Enums\StatusKebun;
+use App\Http\Requests\KebunRequest;
 use App\Models\Kebun;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class KebunController extends Controller
 {
+    /**
+     * Fungsi untuk menerapkan filter pada query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
     private function applyFilters(Builder $query, Request $request): void
     {
+        // Mengambil hanya parameter filter yang relevan
         $filters = $request->only(['status', 'tanggal_tanam_mulai', 'tanggal_tanam_selesai', 'tanggal_panen_mulai', 'tanggal_panen_selesai']);
 
         foreach ($filters as $filterName => $filterValue) {
             if (!empty($filterValue)) {
                 match ($filterName) {
                     'status' => $query->where($filterName, '=', $filterValue),
-                    // Untuk tanggal_tanam_mulai, gunakan kolom 'tanggal_tanam'
                     'tanggal_tanam_mulai' => $query->where('tanggal_tanam', '>=', Carbon::parse($filterValue)->format('Y-m-d')),
-                    // Untuk tanggal_tanam_selesai, gunakan kolom 'tanggal_tanam'
                     'tanggal_tanam_selesai' => $query->where('tanggal_tanam', '<=', Carbon::parse($filterValue)->format('Y-m-d')),
-                    // Untuk tanggal_panen_mulai, gunakan kolom 'tanggal_panen'
                     'tanggal_panen_mulai' => $query->where('tanggal_panen', '>=', Carbon::parse($filterValue)->format('Y-m-d')),
-                    // Untuk tanggal_panen_selesai, gunakan kolom 'tanggal_panen'
                     'tanggal_panen_selesai' => $query->where('tanggal_panen', '<=', Carbon::parse($filterValue)->format('Y-m-d')),
                 };
             }
@@ -42,17 +44,16 @@ class KebunController extends Controller
      */
     public function index(Request $request): View
     {
-        $perPage = $request->input('per_page', 10);
-
+        $perPage = $request->input('perPage', 10);
         $query = Kebun::query()->orderByDesc('created_at');
 
         $this->applyFilters($query, $request);
 
-        $kebun = $query->paginate($perPage)->withQueryString();
-
+        $kebun = $query->paginate($perPage)->appends($request->except('page'));
         return view('pages.admin.kebun.index', [
             'data' => $kebun->items(),
             'pagination' => $kebun,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -67,36 +68,12 @@ class KebunController extends Controller
 
     /**
      * Fungsi untuk menambahkan data kebun
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\KebunRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(KebunRequest $request): RedirectResponse
     {
-        $request->validate([
-            'lokasi' => 'required|string',
-            'luas' => 'required|integer',
-            'status' => ['required', Rule::in(StatusKebun::values())],
-            'tanggal_tanam' => 'required',
-            'tanggal_panen' => 'required',
-        ], [
-            'lokasi.required' => 'Lokasi kebun harus diisi.',
-            'lokasi.string' => 'Lokasi kebun harus berupa teks.',
-            'luas.required' => 'Luas kebun harus diisi.',
-            'luas.integer' => 'Luas kebun harus berupa angka.',
-            'status.required' => 'Status kebun harus dipilih.',
-            'status.in' => 'Status kebun yang dipilih tidak valid.',
-            'tanggal_tanam.required' => 'Tanggal tanam harus diisi.',
-            'tanggal_panen.required' => 'Tanggal panen harus diisi.',
-        ]);
-
-        Kebun::create($request->only([
-            'lokasi',
-            'luas',
-            'status',
-            'tanggal_tanam',
-            'tanggal_panen',
-        ]));
-
+        Kebun::create($request->only(['lokasi', 'luas', 'status', 'tanggal_tanam', 'tanggal_panen']));
         return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil ditambahkan');
     }
 
@@ -108,46 +85,21 @@ class KebunController extends Controller
     public function edit($id): View
     {
         $kebun = Kebun::findOrFail($id);
-        // dd($kebun);
-
         return view('pages.admin.kebun.edit', [
             'data' => $kebun,
         ]);
     }
 
     /**
-     * SFungsi untuk mengupdate data kebun
-     * @param \Illuminate\Http\Request $request
+     * Fungsi untuk mengupdate data kebun
+     * @param \App\Http\Requests\KebunRequest $request
      * @param mixed $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(KebunRequest $request, $id): RedirectResponse
     {
-        $request->validate([
-            'lokasi' => 'required|string',
-            'luas' => 'required|integer',
-            'status' => ['required', Rule::in(StatusKebun::values())],
-            'tanggal_tanam' => 'required',
-            'tanggal_panen' => 'required',
-        ], [
-            'lokasi.required' => 'Lokasi kebun harus diisi.',
-            'lokasi.string' => 'Lokasi kebun harus berupa teks.',
-            'luas.required' => 'Luas kebun harus diisi.',
-            'luas.integer' => 'Luas kebun harus berupa angka.',
-            'status.required' => 'Status kebun harus dipilih.',
-            'status.in' => 'Status kebun yang dipilih tidak valid.',
-            'tanggal_tanam.required' => 'Tanggal tanam harus diisi.',
-            'tanggal_panen.required' => 'Tanggal panen harus diisi.',
-        ]);
-
         $kebun = Kebun::findOrFail($id);
-        $kebun->update($request->only([
-            'lokasi',
-            'luas',
-            'status',
-            'tanggal_tanam',
-            'tanggal_panen',
-        ]));
+        $kebun->update($request->only(['lokasi', 'luas', 'status', 'tanggal_tanam', 'tanggal_panen']));
 
         return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil diupdate');
     }

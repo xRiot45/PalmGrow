@@ -47,7 +47,9 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.pengguna.index') }}" method="GET">
+                    <form action="{{ route('admin.pengguna.index') }}" method="POST">
+                      @csrf
+                      @method('GET')
                       {{-- Input Nama Pengguna --}}
                       <div class="mb-3">
                         <label class="form-label" for="name">Nama Pengguna</label>
@@ -197,8 +199,6 @@
                         </div>
                       </div>
                     </div>
-
-
                     {{-- Modal Hapus Data End --}}
                   </tr>
                 @endforeach

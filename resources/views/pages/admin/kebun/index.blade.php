@@ -12,7 +12,8 @@
           <h4 class="card-title flex-grow-1">Daftar Kebun</h4>
           <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
             {{-- Button Tambah Kebun --}}
-            <a href="{{ route('admin.kebun.create') }}" class="btn btn-md btn-primary">
+            <a href="{{ route('admin.kebun.create') }}"
+              class="btn btn-md btn-primary d-flex justify-content-between align-items-center gap-1">
               <iconify-icon icon="ic:baseline-plus" class="align-middle fs-18">
               </iconify-icon>
               Tambah Kebun
@@ -20,7 +21,7 @@
 
             {{-- Button Modal --}}
             <button type="button"
-              class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-success"
+              class="btn btn-md d-flex justify-content-between align-items-center btn-success d-flex justify-content-between align-items-center gap-1"
               data-bs-toggle="modal" data-bs-target="#filterModal">
               <iconify-icon icon="mage:filter" class="align-middle fs-18">
               </iconify-icon>
@@ -28,7 +29,8 @@
             </button>
 
             {{-- Button Refresh Halaman --}}
-            <a href="{{ route('admin.kebun.index') }}" class="btn btn-md btn-secondary">
+            <a href="{{ route('admin.kebun.index') }}"
+              class="btn btn-md btn-secondary d-flex justify-content-between align-items-center gap-1">
               <iconify-icon icon="ic:baseline-refresh" class="align-middle fs-18">
               </iconify-icon>
               Refresh
@@ -47,7 +49,9 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.kebun.index') }}" method="GET">
+                    <form action="{{ route('admin.kebun.index') }}" method="POST">
+                      @csrf
+                      @method('GET')
                       {{-- Status --}}
                       <div class="mb-3">
                         <label class="form-label" for="status">Status Kebun</label>
@@ -244,7 +248,27 @@
 
         {{-- Pagination Start --}}
         <div class="card-footer border-top">
-          <nav aria-label="Page navigation example">
+          <nav aria-label="Page navigation example"
+            class="d-lg-flex justify-content-lg-between align-items-center text-center">
+            <div class="d-flex flex-wrap gap-2 justify-content-center mb-lg-0 mb-3">
+              <form action="{{ route('admin.kebun.index') }}" method="POST"
+                class="d-flex align-items-center gap-2 justify-content-center flex-wrap">
+                @csrf
+                @method('GET')
+                {{-- Pilihan Rows Per Page --}}
+                <label for="rows" class="mb-0">
+                  Data Per Halaman
+                </label>
+                <select name="perPage" id="perPage" class="form-select w-auto"
+                  onchange="this.form.submit()">
+                  <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                  <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                  <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                  <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                  <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                </select>
+              </form>
+            </div>
             <ul class="pagination justify-content-lg-end justify-content-center mb-0">
               {{-- Navigation ke halaman sebelumnya --}}
               @if ($pagination->currentPage() > 1)
@@ -258,12 +282,40 @@
               @endif
 
               {{-- Looping link halaman --}}
-              @foreach (range(1, $pagination->lastPage()) as $page)
-                <li class="page-item {{ $pagination->currentPage() == $page ? 'active' : '' }}">
-                  <a class="page-link"
-                    href="{{ $pagination->url($page) }}">{{ $page }}</a>
-                </li>
-              @endforeach
+              @if ($pagination->lastPage() > 5)
+                @if ($pagination->currentPage() > 3)
+                  <li class="page-item">
+                    <a class="page-link" href="{{ $pagination->url(1) }}">1</a>
+                  </li>
+                  @if ($pagination->currentPage() > 4)
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                  @endif
+                @endif
+
+                @foreach (range(max(1, $pagination->currentPage() - 2), min($pagination->lastPage(), $pagination->currentPage() + 2)) as $page)
+                  <li class="page-item {{ $pagination->currentPage() == $page ? 'active' : '' }}">
+                    <a class="page-link"
+                      href="{{ $pagination->url($page) }}">{{ $page }}</a>
+                  </li>
+                @endforeach
+
+                @if ($pagination->currentPage() < $pagination->lastPage() - 2)
+                  @if ($pagination->currentPage() < $pagination->lastPage() - 3)
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                  @endif
+                  <li class="page-item">
+                    <a class="page-link"
+                      href="{{ $pagination->url($pagination->lastPage()) }}">{{ $pagination->lastPage() }}</a>
+                  </li>
+                @endif
+              @else
+                @foreach (range(1, $pagination->lastPage()) as $page)
+                  <li class="page-item {{ $pagination->currentPage() == $page ? 'active' : '' }}">
+                    <a class="page-link"
+                      href="{{ $pagination->url($page) }}">{{ $page }}</a>
+                  </li>
+                @endforeach
+              @endif
 
               {{-- Link ke halaman berikutnya --}}
               @if ($pagination->hasMorePages())
@@ -276,7 +328,10 @@
                 </li>
               @endif
             </ul>
+
           </nav>
+
+
         </div>
         {{-- Pagination End --}}
       </div>

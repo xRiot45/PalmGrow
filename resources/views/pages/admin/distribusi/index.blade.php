@@ -44,8 +44,9 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.distribusi.index') }}" method="GET">
-
+                    <form action="{{ route('admin.distribusi.index') }}" method="POST">
+                      @csrf
+                      @method('GET')
                       {{-- Tujuan Distribusi --}}
                       <div class="mb-3">
                         <label class="form-label" for="tujuan_distribusi">Tujuan Distribusi</label>
