@@ -1,8 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Distribusi'])
-
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
+@extends('layouts.admin/app', ['title' => 'Distribusi'])
 
 
 @section('content')

@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Petugas'])
+@extends('layouts.admin/app', ['title' => 'Petugas'])
 
 @section('content')
   <div>

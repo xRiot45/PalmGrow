@@ -1,4 +1,4 @@
-@extends('layouts.auth', ['title' => 'Register'])
+@extends('layouts.auth/app', ['title' => 'Register'])
 
 @section('css')
   @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])

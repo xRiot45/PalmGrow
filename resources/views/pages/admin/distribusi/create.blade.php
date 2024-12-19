@@ -1,9 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Tambah Distribusi'])
-
-
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
+@extends('layouts.admin/app', ['title' => 'Tambah Distribusi'])
 
 
 @section('content')

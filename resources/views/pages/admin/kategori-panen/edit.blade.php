@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Tambah Kategori Panen'])
+@extends('layouts.admin/app', ['title' => 'Tambah Kategori Panen'])
 
 
 @section('content')

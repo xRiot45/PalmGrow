@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Kategori Panen'])
+@extends('layouts.admin/app', ['title' => 'Kategori Panen'])
 
 @section('css')
   @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])

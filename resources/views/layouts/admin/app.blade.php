@@ -1,31 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
 
 <head>
-  @include('layouts.partials/title-meta', ['title' => $title])
+  @include('layouts/title-meta', ['title' => $title])
+  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
   @yield('css')
-  @include('layouts.partials/head-css')
+  @include('layouts/head-css')
 
-  <!-- Load jQuery before toastr.js -->
+  {{-- JQuery Script --}}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- Toastr CSS -->
+  {{-- Toastr CSS --}}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
     integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  {{-- CKEditor CSS --}}
+  <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css" crossorigin>
+
 </head>
 
-<body class="h-100">
+<body>
 
-  @yield('content')
+  <div class="wrapper">
+    @include('layouts.admin.partials/topbar', ['title' => $title])
+    @include('layouts.admin.partials/left-sidebar')
+    <div class="page-content">
+      <div class="container-fluid">
+        @yield('content')
+      </div>
+      @include('layouts.admin.partials/footer')
+    </div>
+  </div>
 
-  @include('layouts.partials/footer-scripts')
+  @include('layouts.admin.partials/right-sidebar')
 
-  <!-- Make sure toastr.js is loaded after jQuery -->
+  {{-- Toastr JS --}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
     integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  @stack('js')
   @vite(['resources/js/app.js', 'resources/js/layout.js'])
 
   {{-- Toast Message Start --}}
@@ -39,7 +54,6 @@
     </script>
   @endif
   {{-- Toast Message End --}}
-
 </body>
 
 </html>
