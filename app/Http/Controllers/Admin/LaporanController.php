@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LaporanController extends Controller
 {
@@ -31,30 +32,23 @@ class LaporanController extends Controller
         }
     }
 
-    /**
-     * Fungsi untuk menampilkan daftar laporan dan menerapkan fitur filter
-     * @return \Illuminate\View\View
-     */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $per_page = request()->input('per_page', 10);
-        $query = Laporan::query()->orderBy('created_at', 'desc');
+        $perPage = request()->input('perPage', 10);
+        $query = Laporan::query()->orderByDesc('created_at');
 
         $this->applyFilters($query, request());
 
-        $laporan = $query->paginate($per_page)->withQueryString();
+        $laporan = $query->paginate($perPage)->appends($request->except('page'));
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
         return view('pages.admin.laporan.index', [
             'data' => $laporan->items(),
             'pagination' => $laporan,
             'lokasi_kebun' => $lokasi_kebun,
+            'perPage' => $perPage,
         ]);
     }
 
-    /**
-     * Fungsi untuk menampilkan form tambah laporan dan mengirimkan data lokasi kebun
-     * @return \Illuminate\View\View
-     */
     public function create(): View
     {
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
@@ -63,11 +57,6 @@ class LaporanController extends Controller
         ]);
     }
 
-    /**
-     * Fungsi untuk menambahkan laporan
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(LaporanRequest $request): RedirectResponse
     {
         if ($request->hasFile('file_path') && $request->file('file_path')->isValid()) {
@@ -78,22 +67,21 @@ class LaporanController extends Controller
             return redirect()->back()->with('error', 'File tidak ditemukan atau tidak valid');
         }
 
-        Laporan::create([
+        $buat_laporan = Laporan::create([
             'kebun_id' => $request->kebun_id,
             'file_type' => $filename,
             'file_path' => 'public/laporan/' . $filename,
             'tanggal_laporan' => $request->tanggal_laporan,
         ]);
 
-        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan');
+        if ($buat_laporan) {
+            return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan');
+        }
+
+        return redirect()->route('admin.laporan.index')->with('error', 'Laporan gagal ditambahkan');
     }
 
-    /**
-     * Fungsi untuk menampilkan form edit laporan dan mengirimkan data lokasi kebun
-     * @param mixed $id
-     * @return \Illuminate\View\View
-     */
-    public function edit($id): View
+    public function edit(int $id): View
     {
         $laporan = Laporan::find($id);
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
@@ -104,12 +92,6 @@ class LaporanController extends Controller
         ]);
     }
 
-    /**
-     * Fungsi untuk mengupdate laporan
-     * @param \Illuminate\Http\Request $request
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(LaporanRequest $request, $id): RedirectResponse
     {
         $data = Laporan::findOrFail($id);
@@ -125,16 +107,16 @@ class LaporanController extends Controller
             $data->file_path = $filePath;
         }
 
-        $data->update($request->except('file_path'));
-        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui');
+        $update_laporan = $data->update($request->except('file_path'));
+
+        if ($update_laporan) {
+            return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui');
+        }
+
+        return redirect()->route('admin.laporan.index')->with('error', 'Laporan gagal diperbarui');
     }
 
-    /**
-     * Fungsi untuk menghapus data laporan dan file laporan
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($id): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
         $laporan = Laporan::find($id);
         if ($laporan) {
@@ -143,18 +125,17 @@ class LaporanController extends Controller
                 Storage::delete($file_path);
             }
 
-            $laporan->delete();
-            return redirect()->route('admin.laporan.index')->with('success', 'Laporan beserta file berhasil dihapus');
+            $hapus_laporan = $laporan->delete();
+            if ($hapus_laporan) {
+                return redirect()->route('admin.laporan.index')->with('success', 'Laporan beserta file berhasil dihapus');
+            }
+
+            return redirect()->route('admin.laporan.index')->with('error', 'Laporan beserta file gagal dihapus');
         }
 
         return redirect()->route('admin.laporan.index')->with('error', 'Laporan tidak ditemukan');
     }
 
-    /**
-     * Fungsi untuk melihat file pdf bukti laporan
-     * @param mixed $id
-     * @return \Illuminate\View\View
-     */
     public function view_pdf($id): View
     {
         $bukti_laporan = Laporan::find($id);
@@ -173,12 +154,7 @@ class LaporanController extends Controller
         ]);
     }
 
-    /**
-     * Fungsi untuk mengunduh file pdf bukti laporan
-     * @param mixed $id
-     * @return mixed|\Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function download_pdf($id)
+    public function download_pdf($id): BinaryFileResponse
     {
         $laporan = Laporan::find($id);
         $pdfPath = storage_path('app/' . $laporan->file_path);

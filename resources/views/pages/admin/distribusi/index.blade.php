@@ -144,6 +144,7 @@
                 <th>Tanggal Distribusi</th>
                 <th>Lokasi Kebun</th>
                 <th>Tanggal Produksi</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             {{-- Table Head End --}}

@@ -8,9 +8,9 @@
   <div class="row">
     <div class="col-xl-12">
       <div class="card">
-        <div class="card-header d-md-flex justify-content-between align-items-center gap-1">
+        <div class="card-header d-lg-flex justify-content-between align-items-center gap-1">
           <h4 class="card-title flex-grow-1">Daftar Kebun</h4>
-          <div class="d-md-flex flex-wrap gap-1 mt-md-0 mt-3">
+          <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
             {{-- Button Tambah Kebun --}}
             <a href="{{ route('admin.kebun.create') }}"
               class="btn btn-md btn-primary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
