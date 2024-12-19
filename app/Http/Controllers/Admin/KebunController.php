@@ -13,17 +13,9 @@ use Illuminate\Http\Request;
 
 class KebunController extends Controller
 {
-    /**
-     * Fungsi untuk menerapkan filter pada query
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \Illuminate\Http\Request $request
-     * @return void
-     */
     private function applyFilters(Builder $query, Request $request): void
     {
-        // Mengambil hanya parameter filter yang relevan
         $filters = $request->only(['status', 'tanggal_tanam_mulai', 'tanggal_tanam_selesai', 'tanggal_panen_mulai', 'tanggal_panen_selesai']);
-
         foreach ($filters as $filterName => $filterValue) {
             if (!empty($filterValue)) {
                 match ($filterName) {
@@ -37,11 +29,6 @@ class KebunController extends Controller
         }
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman kebun yang disertai dengan fitur filter dan pagination
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\View\View
-     */
     public function index(Request $request): View
     {
         $perPage = $request->input('perPage', 10);
@@ -57,32 +44,22 @@ class KebunController extends Controller
         ]);
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman tambah kebun
-     * @return \Illuminate\Contracts\View\View
-     */
     public function create(): View
     {
         return view('pages.admin.kebun.create');
     }
 
-    /**
-     * Fungsi untuk menambahkan data kebun
-     * @param \App\Http\Requests\KebunRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(KebunRequest $request): RedirectResponse
     {
-        Kebun::create($request->only(['lokasi', 'luas', 'status', 'tanggal_tanam', 'tanggal_panen']));
-        return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil ditambahkan');
+        $kebun = Kebun::create($request->validated());
+        if ($kebun) {
+            return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil ditambahkan');
+        }
+
+        return redirect()->route('admin.kebun.index')->with('error', 'Kebun gagal ditambahkan');
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman edit dan mengirimkan data kebun berdasrkan id ke halaman edit nya
-     * @param mixed $id
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit($id): View
+    public function edit(int $id): View
     {
         $kebun = Kebun::findOrFail($id);
         return view('pages.admin.kebun.edit', [
@@ -90,29 +67,23 @@ class KebunController extends Controller
         ]);
     }
 
-    /**
-     * Fungsi untuk mengupdate data kebun
-     * @param \App\Http\Requests\KebunRequest $request
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(KebunRequest $request, $id): RedirectResponse
     {
         $kebun = Kebun::findOrFail($id);
-        $kebun->update($request->only(['lokasi', 'luas', 'status', 'tanggal_tanam', 'tanggal_panen']));
+        if ($kebun->update($request->validated())) {
+            return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil diperbarui');
+        }
 
-        return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil diupdate');
+        return redirect()->route('admin.kebun.index')->with('error', 'Kebun gagal diperbarui');
     }
 
-    /**
-     * Fungsi untuk menghapus data kebun berdasarkan id nya
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($id): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
         $kebun = Kebun::findOrFail($id);
-        $kebun->delete();
+        if ($kebun->delete()) {
+            return redirect()->route('admin.kebun.index')->with('error', 'Kebun gagal dihapus');
+        }
+
         return redirect()->route('admin.kebun.index')->with('success', 'Kebun berhasil dihapus');
     }
 }

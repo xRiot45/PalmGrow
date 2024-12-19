@@ -3,90 +3,72 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Enums\Role;
+use App\Http\Requests\PenggunaRequest;
 use App\Models\Pengguna;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class PenggunaController extends Controller
 {
-    /**
-     * Fungsi untuk menampilkan semua pengguna yang terdaftar & fitur pencarian berdasarkan nama, email dan juga role
-     */
-    public function index(Request $request)
+    private function applyFilters(Builder $query, Request $request): void
     {
-        $per_page = $request->input('per_page', 10);
-        $name_search = $request->input('name');
-        $email_search = $request->input('email');
-        $role_search = $request->input('role');
+        $filters = $request->only(['name', 'email', 'role']);
+        foreach ($filters as $filterName => $filterValue) {
+            if (!empty($filterValue)) {
+                match ($filterName) {
+                    'name' => $query->where('name', 'like', '%' . $filterValue . '%'),
+                    'email' => $query->where('email', 'like', '%' . $filterValue . '%'),
+                    'role' => $query->where('role', 'like', '%' . $filterValue . '%'),
+                };
+            }
+        }
+    }
 
+    public function index(Request $request): View
+    {
+        $perPage = $request->input('perPage', 10);
         $query = Pengguna::query()->orderBy('created_at', 'desc');
 
-        if ($name_search || $email_search || $role_search) {
-            $query->where(function ($query) use ($name_search, $email_search, $role_search) {
-                if ($name_search) {
-                    $query->where('name', 'LIKE', '%' . $name_search . '%');
-                }
-                if ($email_search) {
-                    $query->where('email', 'LIKE', '%' . $email_search . '%');
-                }
-                if ($role_search) {
-                    $query->where('role', 'LIKE', '%' . $role_search . '%');
-                }
-            });
-        }
+        $this->applyFilters($query, $request);
 
-        $pengguna = $query->paginate($per_page);
-
+        $pengguna = $query->paginate($perPage)->appends($request->except('page'));
         return view('pages.admin.pengguna.index', [
             'data' => $pengguna->items(),
             'pagination' => $pengguna,
+            'perPage' => $perPage,
         ]);
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman form tambah pengguna
-     */
-    public function create()
+    public function create(): View
     {
         return view('pages.admin.pengguna.create');
     }
 
-    /**
-     * Fungsi untuk menyimpan data pengguna
-     */
-    public function store(Request $request)
+    public function store(PenggunaRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'nullable|min:3|max:255',
-            'role' => ['required', Rule::in(array_column(Role::cases(), 'value'))],
-        ]);
-
-        $emailAlreadyExist = Pengguna::where('email', $validated['email'])->first();
-        if ($emailAlreadyExist) {
-            return redirect()->back()->with('error', 'Email sudah digunakan');
+        $existingUser = Pengguna::where('email', $request->email)->first();
+        if ($existingUser) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar');
         }
 
         $pengguna = Pengguna::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make('password123'),
-            'role' => $validated['role'],
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('password'),
+            'role' => $request->role,
         ]);
 
-        $pengguna->save();
+        if ($pengguna) {
+            return redirect()->route('admin.pengguna.index')->with('success', 'Berhasil menambahkan pengguna');
+        }
 
-        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan');
+        return redirect()->route('admin.pengguna.index')->with('error', 'Gagal menambahkan pengguna');
     }
 
-    /**
-     * Fungsi untuk menampilkan halaman form edit data pengguna
-     */
-    public function edit($id)
+    public function edit(int $id): View
     {
         $pengguna = Pengguna::findOrFail($id);
         return view('pages.admin.pengguna.edit', [
@@ -94,38 +76,31 @@ class PenggunaController extends Controller
         ]);
     }
 
-    /**
-     * Fungsi untuk mengupdate data pengguna
-     */
-    public function update(Request $request, $id)
+    public function update(PenggunaRequest $request, int $id): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'role' => ['required', Rule::in(array_column(Role::cases(), 'value'))],
-        ]);
-
         $pengguna = Pengguna::findOrFail($id);
-        $pengguna->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'role' => $validated['role'],
-        ]);
+        if ($request->email !== $pengguna->email && Pengguna::whereEmail($request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar');
+        }
 
-        return redirect(route('admin.pengguna.index'))->with('success', 'Pengguna berhasil diupdate');
+        if ($pengguna->update($request->validated())) {
+            return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diupdate');
+        }
+
+        return redirect()->route('admin.pengguna.index')->with('error', 'Pengguna gagal diupdate');
     }
 
-    /**
-     * Fungsi untuk menghapus data pengguna
-     */
-    public function destroy($id): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
-        $pengguna = Pengguna::findOrFail($id);
-        if ($pengguna->role->value === 'Admin') {
+        $user = Pengguna::findOrFail($id);
+        if ($user->role->value === 'Admin') {
             return redirect()->route('admin.pengguna.index')->with('error', 'Tidak dapat menghapus akun admin');
         }
 
-        $pengguna->delete();
-        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus');
+        if ($user->delete()) {
+            return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus');
+        }
+
+        return redirect()->route('admin.pengguna.index')->with('error', 'Pengguna gagal dihapus');
     }
 }
