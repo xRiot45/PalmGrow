@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController
 use App\Http\Controllers\Admin\PenggunaController as AdminPenggunaController;
 use App\Http\Controllers\Admin\PetugasController as AdminPetugasController;
 use App\Http\Controllers\Admin\ProduksiController as AdminProduksiController;
+use App\Http\Controllers\Admin\LaporanPenggunaController as AdminLaporanPenggunaController;
 
 // Import Petugas Controller
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
@@ -110,6 +111,12 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::get('/edit-kategori-panen/{id}', [AdminKategoriPanenController::class, 'edit'])->name('admin.kategori-panen.edit');
             Route::put('/edit-kategori-panen/{id}', [AdminKategoriPanenController::class, 'update'])->name('admin.kategori-panen.update');
             Route::delete('/{id}', [AdminKategoriPanenController::class, 'destroy'])->name('admin.kategori-panen.destroy');
+        });
+
+        // Laporan Pengguna (Admin)
+        Route::prefix('/laporan-pengguna')->group(function () {
+            Route::get('/', [AdminLaporanPenggunaController::class, 'index'])->name('admin.laporan-pengguna.index');
+            Route::get('/export-excel', [AdminLaporanPenggunaController::class, 'export_excel'])->name('admin.laporan-pengguna.export_excel');
         });
     });
 
