@@ -24,7 +24,7 @@
       <li class="menu-title">Menu</li>
 
       {{-- Dashboard --}}
-      <li class="nav-item">
+      <li class="nav-item pb-1">
         <a class="nav-link" href="{{ route('petugas.dashboard.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="solar:widget-5-bold-duotone"></iconify-icon>
@@ -35,7 +35,7 @@
       {{-- Dashboard --}}
 
       {{-- Laporan Kebun --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('petugas.laporan.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="lsicon:report-filled"></iconify-icon>

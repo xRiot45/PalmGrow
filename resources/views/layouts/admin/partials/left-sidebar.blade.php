@@ -24,7 +24,7 @@
       <li class="menu-title">Menu</li>
 
       {{-- Dashboard --}}
-      <li class="nav-item">
+      <li class="nav-item pb-2">
         <a class="nav-link" href="{{ route('admin.dashboard.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="solar:widget-5-bold-duotone"></iconify-icon>
@@ -35,7 +35,7 @@
       {{-- Dashboard --}}
 
       {{-- Pengguna --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.pengguna.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="ph:users-three-fill"></iconify-icon>
@@ -46,7 +46,7 @@
       {{-- Pengguna --}}
 
       {{-- Kebun --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.kebun.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="maki:garden"></iconify-icon>
@@ -57,7 +57,7 @@
       {{-- Kebun --}}
 
       {{-- Petugas --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.petugas.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="healthicons:officer"></iconify-icon>
@@ -67,7 +67,7 @@
       </li>
 
       {{-- Produksi --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.produksi.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="material-symbols:factory"></iconify-icon>
@@ -77,7 +77,7 @@
       </li>
 
       {{-- Distribusi --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.distribusi.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="lsicon:distribution-filled"></iconify-icon>
@@ -87,7 +87,7 @@
       </li>
 
       {{-- Laporan Kebun --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.laporan.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="lsicon:report-filled"></iconify-icon>
@@ -97,7 +97,7 @@
       </li>
 
       {{-- Pembayaran --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.pembayaran.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="tdesign:undertake-transaction-filled"></iconify-icon>
@@ -107,7 +107,7 @@
       </li>
 
       {{-- Kategori Panen --}}
-      <li class="nav-item">
+      <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.kategori-panen.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="material-symbols:category"></iconify-icon>
