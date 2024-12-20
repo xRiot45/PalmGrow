@@ -79,7 +79,6 @@
                 <th>Nama Pengguna</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Aksi</th>
               </tr>
             </thead>
             {{-- Table Head End --}}
@@ -88,7 +87,7 @@
             <tbody>
               @if (empty($data))
                 <tr>
-                  <td colspan="5" class="text-center">
+                  <td colspan="4" class="text-center">
                     <img src="/images/404-error.png" alt="Not Found Img" class="w-25 h-25">
                     <h4 class="fw-bold">Data Tidak Ditemukan</h4>
                   </td>
@@ -119,56 +118,6 @@
                         <span class="badge bg-secondary">Role Tidak Dikenal</span>
                       @endif
                     </td>
-
-
-                    {{-- Button Aksi --}}
-                    <td>
-                      <div class="d-flex gap-2">
-                        <a href="{{ route('admin.pengguna.edit', [$pengguna->id]) }}"
-                          class="btn btn-soft-primary btn-sm" data-bs-toggle="tooltip"
-                          data-bs-placement="top" data-bs-title="Edit Data">
-                          <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18">
-                          </iconify-icon>
-                        </a>
-                        <button type="button" class="btn btn-soft-danger btn-sm"
-                          data-bs-toggle="modal" data-bs-target="#hapusDataModal"
-                          data-id="{{ $pengguna->id }}">
-                          <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
-                            class="align-middle fs-18"></iconify-icon>
-                        </button>
-                      </div>
-                    </td>
-
-                    {{-- Modal Hapus Data Start --}}
-                    <div class="modal fade" id="hapusDataModal" tabindex="-1"
-                      aria-labelledby="hapusDataModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-body">
-                            <form id="hapusForm"
-                              action="{{ route('admin.pengguna.destroy', ':id') }}" method="POST">
-                              @csrf
-                              @method('DELETE')
-
-                              <div class="text-center">
-                                <img src="/images/delete.png" alt="Not Found Img" class="w-100 h-100">
-                                <h4 class="fw-bold">Hapus Data Pengguna</h4>
-                                <p class="text-muted">Anda yakin ingin menghapus data pengguna ini?
-                                </p>
-                              </div>
-
-                              <div class="w-100 d-flex gap-2 justify-content-center mt-3">
-                                <button type="button" class="btn btn-secondary w-100 py-2"
-                                  data-bs-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-primary w-100 py-2">Hapus
-                                  Data</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {{-- Modal Hapus Data End --}}
                   </tr>
                 @endforeach
               @endif
