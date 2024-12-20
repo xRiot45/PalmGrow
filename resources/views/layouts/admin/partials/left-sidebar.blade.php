@@ -129,6 +129,16 @@
           <span class="nav-text"> Laporan Pengguna </span>
         </a>
       </li>
+
+      {{-- Laporan Kebun --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan-kebun.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="game-icons:farmer"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Kebun </span>
+        </a>
+      </li>
     </ul>
   </div>
 </div>
