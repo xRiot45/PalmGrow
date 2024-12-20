@@ -1,4 +1,4 @@
-@extends('layouts.admin/app', ['title' => 'Laporan Kebun'])
+@extends('layouts.admin/app', ['title' => 'Laporan'])
 
 @section('css')
   @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
@@ -12,7 +12,7 @@
           <h4 class="card-title flex-grow-1">Daftar Laporan</h4>
           <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
             {{-- Button Tambah Laporan --}}
-            <a href="{{ route('admin.laporan-kebun.create') }}"
+            <a href="{{ route('admin.laporan.create') }}"
               class="btn btn-md btn-primary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="ic:baseline-plus" class="align-middle fs-18">
               </iconify-icon>
@@ -28,7 +28,7 @@
             </a>
 
             {{-- Button Refresh Halaman --}}
-            <a href="{{ route('admin.laporan-kebun.index') }}"
+            <a href="{{ route('admin.laporan.index') }}"
               class="btn btn-md btn-secondary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="ic:baseline-refresh" class="align-middle fs-18">
               </iconify-icon>
@@ -48,7 +48,7 @@
 
                   {{-- Modal Body Start --}}
                   <div class="modal-body">
-                    <form action="{{ route('admin.laporan-kebun.index') }}" method="POST">
+                    <form action="{{ route('admin.laporan.index') }}" method="POST">
                       @csrf
                       @method('GET')
                       {{-- Lokasi Kebun --}}
@@ -144,7 +144,7 @@
 
                     {{-- Bukti Laporan --}}
                     <td class="d-flex items-center gap-2">
-                      <a href="{{ route('admin.laporan-kebun.view_pdf', $laporan->id) }}">
+                      <a href="{{ route('admin.laporan.view_pdf', $laporan->id) }}">
                         <button type="button"
                           class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-soft-blue">
                           <iconify-icon icon="lsicon:report-filled"
@@ -153,7 +153,7 @@
                         </button>
                       </a>
 
-                      <a href="{{ route('admin.laporan-kebun.download_pdf', $laporan->id) }}"
+                      <a href="{{ route('admin.laporan.download_pdf', $laporan->id) }}"
                         target="_blank">
                         <button type="button"
                           class="btn btn-md d-flex gap-1 justify-content-between align-items-center btn-soft-success">
@@ -167,7 +167,7 @@
                     {{-- Button Aksi --}}
                     <td>
                       <div class="d-flex gap-2">
-                        <a href="{{ route('admin.laporan-kebun.edit', [$laporan->id]) }}"
+                        <a href="{{ route('admin.laporan.edit', [$laporan->id]) }}"
                           class="btn btn-soft-primary btn-sm" data-bs-toggle="tooltip"
                           data-bs-placement="top" data-bs-title="Edit Data">
                           <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18">
@@ -189,7 +189,7 @@
                         <div class="modal-content">
                           {{-- Modal Body Start --}}
                           <div class="modal-body">
-                            <form action="{{ route('admin.laporan-kebun.destroy', $laporan->id) }}"
+                            <form action="{{ route('admin.laporan.destroy', $laporan->id) }}"
                               method="POST">
                               @csrf
                               @method('DELETE')
@@ -232,7 +232,7 @@
           <nav aria-label="Page navigation example"
             class="d-lg-flex justify-content-lg-between align-items-center text-center">
             <div class="d-flex flex-wrap gap-2 justify-content-center mb-lg-0 mb-3">
-              <form action="{{ route('admin.laporan-kebun.index') }}" method="POST"
+              <form action="{{ route('admin.laporan.index') }}" method="POST"
                 class="d-flex align-items-center gap-2 justify-content-center flex-wrap">
                 @csrf
                 @method('GET')

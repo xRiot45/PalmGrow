@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class LaporanKebunController extends Controller
+class LaporanController extends Controller
 {
     private function applyFilters(Builder $query, Request $request): void
     {
@@ -41,7 +41,7 @@ class LaporanKebunController extends Controller
 
         $laporan = $query->paginate($perPage)->appends($request->except('page'));
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
-        return view('pages.admin.laporan-kebun.index', [
+        return view('pages.admin.laporan.index', [
             'data' => $laporan->items(),
             'pagination' => $laporan,
             'lokasi_kebun' => $lokasi_kebun,
@@ -52,7 +52,7 @@ class LaporanKebunController extends Controller
     public function create(): View
     {
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
-        return view('pages.admin.laporan-kebun.create', [
+        return view('pages.admin.laporan.create', [
             'lokasi_kebun' => $lokasi_kebun,
         ]);
     }
@@ -75,10 +75,10 @@ class LaporanKebunController extends Controller
         ]);
 
         if ($tambah_data) {
-            return redirect()->route('admin.laporan-kebun.index')->with('success', 'Laporan berhasil ditambahkan');
+            return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan');
         }
 
-        return redirect()->route('admin.laporan-kebun.index')->with('error', 'Laporan gagal ditambahkan');
+        return redirect()->route('admin.laporan.index')->with('error', 'Laporan gagal ditambahkan');
     }
 
     public function edit(int $id): View
@@ -86,7 +86,7 @@ class LaporanKebunController extends Controller
         $laporan = Laporan::find($id);
         $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
 
-        return view('pages.admin.laporan-kebun.edit', [
+        return view('pages.admin.laporan.edit', [
             'data' => $laporan,
             'lokasi_kebun' => $lokasi_kebun,
         ]);
@@ -110,10 +110,10 @@ class LaporanKebunController extends Controller
         $update_data = $data->update($request->except('file_path'));
 
         if ($update_data) {
-            return redirect()->route('admin.laporan-kebun.index')->with('success', 'Laporan berhasil diperbarui');
+            return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui');
         }
 
-        return redirect()->route('admin.laporan-kebun.index')->with('error', 'Laporan gagal diperbarui');
+        return redirect()->route('admin.laporan.index')->with('error', 'Laporan gagal diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -127,13 +127,13 @@ class LaporanKebunController extends Controller
 
             $hapus_data = $laporan->delete();
             if ($hapus_data) {
-                return redirect()->route('admin.laporan-kebun.index')->with('success', 'Laporan beserta file berhasil dihapus');
+                return redirect()->route('admin.laporan.index')->with('success', 'Laporan beserta file berhasil dihapus');
             }
 
-            return redirect()->route('admin.laporan-kebun.index')->with('error', 'Laporan beserta file gagal dihapus');
+            return redirect()->route('admin.laporan.index')->with('error', 'Laporan beserta file gagal dihapus');
         }
 
-        return redirect()->route('admin.laporan-kebun.index')->with('error', 'Laporan tidak ditemukan');
+        return redirect()->route('admin.laporan.index')->with('error', 'Laporan tidak ditemukan');
     }
 
     public function view_pdf($id): View
@@ -148,7 +148,7 @@ class LaporanKebunController extends Controller
             abort(404, 'File PDF tidak ditemukan');
         }
 
-        return view('pages.admin.laporan-kebun.view-pdf', [
+        return view('pages.admin.laporan.view-pdf', [
             'data' => $bukti_laporan,
             'pdfPath' => $pdfPath,
         ]);

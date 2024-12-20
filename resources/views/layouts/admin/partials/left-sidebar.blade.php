@@ -66,6 +66,16 @@
         </a>
       </li>
 
+      {{-- Laporan --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="lsicon:report-filled"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan </span>
+        </a>
+      </li>
+
       {{-- Produksi --}}
       <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.produksi.index') }}">
@@ -108,15 +118,7 @@
 
       <li class="menu-title mt-3">Laporan</li>
 
-      {{-- Laporan Kebun --}}
-      <li class="nav-item pb-1">
-        <a class="nav-link" href="{{ route('admin.laporan-kebun.index') }}">
-          <span class="nav-icon">
-            <iconify-icon icon="lsicon:report-filled"></iconify-icon>
-          </span>
-          <span class="nav-text"> Laporan Kebun </span>
-        </a>
-      </li>
+
 
       {{-- Laporan Pengguna --}}
       <li class="nav-item pb-1">
