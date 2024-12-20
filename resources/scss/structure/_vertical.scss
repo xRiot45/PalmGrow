@@ -442,140 +442,140 @@ html[data-menu-size="condensed"] {
      }
 }
 
-// Small Hover
-html[data-menu-size="sm-hover"] {
+// // Small Hover
+// html[data-menu-size="sm-hover"] {
 
-     .topbar {
-          padding-left: $main-nav-width-sm;
-     }
+//      .topbar {
+//           padding-left: $main-nav-width-sm;
+//      }
 
-     .page-content {
-          margin-left: $main-nav-width-sm;
-          position: relative;
-     }
+//      .page-content {
+//           margin-left: $main-nav-width-sm;
+//           position: relative;
+//      }
 
-     .button-toggle-menu {
-          display: none;
-     }
+//      .button-toggle-menu {
+//           display: none;
+//      }
 
-     .main-nav:not(:hover) {
-          width: $main-nav-width-sm;
-          min-width: $main-nav-width-sm;
+//      .main-nav:not(:hover) {
+//           width: $main-nav-width-sm;
+//           min-width: $main-nav-width-sm;
 
-          .logo-box {
-               text-align: center;
-               padding: 0;
+//           .logo-box {
+//                text-align: center;
+//                padding: 0;
 
-               .logo-sm {
-                    display: inline-block;
-               }
+//                .logo-sm {
+//                     display: inline-block;
+//                }
 
-               .logo-lg {
-                    display: none;
-               }
-          }
+//                .logo-lg {
+//                     display: none;
+//                }
+//           }
 
-          .nav-item {
+//           .nav-item {
 
-               .nav-link {
-                    justify-content: center;
+//                .nav-link {
+//                     justify-content: center;
 
-                    .nav-text,
-                    .badge {
-                         display: none;
-                    }
+//                     .nav-text,
+//                     .badge {
+//                          display: none;
+//                     }
 
-                    &.menu-arrow {
-                         &::after {
-                              display: none;
-                         }
-                    }
-               }
+//                     &.menu-arrow {
+//                          &::after {
+//                               display: none;
+//                          }
+//                     }
+//                }
 
-               .collapse,
-               .collapsing {
-                    display: none;
-               }
-          }
+//                .collapse,
+//                .collapsing {
+//                     display: none;
+//                }
+//           }
 
-          .menu-title {
-               transition: all 0.3s ease-in-out;
-               height: 0;
-               opacity: 0;
-               padding: 0;
-          }
+//           .menu-title {
+//                transition: all 0.3s ease-in-out;
+//                height: 0;
+//                opacity: 0;
+//                padding: 0;
+//           }
 
-          .simplebar-track.simplebar-vertical {
-               visibility: hidden !important;
-          }
-     }
+//           .simplebar-track.simplebar-vertical {
+//                visibility: hidden !important;
+//           }
+//      }
 
-     .main-nav {
-          width: $main-nav-width;
-          min-width: $main-nav-width;
+//      .main-nav {
+//           width: $main-nav-width;
+//           min-width: $main-nav-width;
 
-          .logo-box {
-               text-align: left;
-          }
+//           .logo-box {
+//                text-align: left;
+//           }
 
-          &:hover {
-               .button-sm-hover {
-                    display: block;
+//           &:hover {
+//                .button-sm-hover {
+//                     display: block;
 
-                    .button-sm-hover-icon {
-                         transform: rotateY(180deg);
-                         transition: all 0.3s ease-in-out;
-                    }
-               }
+//                     .button-sm-hover-icon {
+//                          transform: rotateY(180deg);
+//                          transition: all 0.3s ease-in-out;
+//                     }
+//                }
 
-          }
+//           }
 
-          .simplebar-track.simplebar-horizontal {
-               visibility: hidden !important;
-          }
-     }
-}
+//           .simplebar-track.simplebar-horizontal {
+//                visibility: hidden !important;
+//           }
+//      }
+// }
 
-// Small Hover Active
-html[data-menu-size="sm-hover-active"] {
-     .button-toggle-menu {
-          display: none;
-     }
+// // Small Hover Active
+// html[data-menu-size="sm-hover-active"] {
+//      .button-toggle-menu {
+//           display: none;
+//      }
 
-     .main-nav {
-          .logo-box {
-               text-align: left;
-          }
+//      .main-nav {
+//           .logo-box {
+//                text-align: left;
+//           }
 
-          .button-sm-hover {
-               display: block;
+//           .button-sm-hover {
+//                display: block;
 
-               .button-sm-hover-icon {
-                    transform-style: preserve-3d;
-                    transition: all 0.3s ease-in-out;
-               }
-          }
+//                .button-sm-hover-icon {
+//                     transform-style: preserve-3d;
+//                     transition: all 0.3s ease-in-out;
+//                }
+//           }
 
-     }
-}
+//      }
+// }
 
-// SideNav Hidden (Mobile View)
-html[data-menu-size="hidden"] {
-     .main-nav {
-          margin-left: calc($main-nav-width * -1);
-     }
+// // SideNav Hidden (Mobile View)
+// html[data-menu-size="hidden"] {
+//      .main-nav {
+//           margin-left: calc($main-nav-width * -1);
+//      }
 
-     .page-content {
-          margin-left: 0;
-     }
+//      .page-content {
+//           margin-left: 0;
+//      }
 
-     &.sidebar-enable {
-          .main-nav {
-               margin-left: 0;
-               z-index: 1055;
-          }
-     }
-}
+//      &.sidebar-enable {
+//           .main-nav {
+//                margin-left: 0;
+//                z-index: 1055;
+//           }
+//      }
+// }
 
 // Sidenav Dark and Brand
 html[data-bs-theme="dark"],

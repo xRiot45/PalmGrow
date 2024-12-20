@@ -80,32 +80,7 @@
                 Condensed
               </label>
             </div>
-
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="data-menu-size"
-                id="leftbar-hidden" value="hidden">
-              <label class="form-check-label" for="leftbar-hidden">
-                Hidden
-              </label>
-            </div>
-
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="data-menu-size"
-                id="leftbar-size-small-hover-active" value="sm-hover-active">
-              <label class="form-check-label" for="leftbar-size-small-hover-active">
-                Small Hover Active
-              </label>
-            </div>
-
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="data-menu-size"
-                id="leftbar-size-small-hover" value="sm-hover">
-              <label class="form-check-label" for="leftbar-size-small-hover">
-                Small Hover
-              </label>
-            </div>
           </div>
-
         </div>
       </div>
     </div>

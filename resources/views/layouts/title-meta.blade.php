@@ -1,5 +1,6 @@
+{{-- Title Meta Start --}}
 <meta charset="utf-8" />
-<title>{{ $title }} | PalmGrow - Sistem Informasi Perkebunan Kelapa Sawit</title>
+<title>{{ $title }}</title>
 <meta name="viewport"
   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="description"
@@ -11,8 +12,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 {{-- Open Graph Tags --}}
-<meta property="og:title"
-  content="{{ $title }} | PalmGrow - Sistem Informasi Perkebunan Kelapa Sawit" />
+<meta property="og:title" content="{{ $title }}" />
 <meta property="og:description"
   content="PalmGrow adalah platform digital untuk memantau dan mengelola perkebunan kelapa sawit, mencakup data lahan, pemupukan, panen, dan distribusi hasil." />
 <meta property="og:image" content="URL_TO_IMAGE" />
