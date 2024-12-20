@@ -93,7 +93,7 @@
 
 
           {{-- Export PDF --}}
-          <a
+          <a href="{{ route('admin.laporan-kebun.export_pdf', request()->all()) }}"
             class="btn btn-md btn-danger d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
             <iconify-icon icon="mingcute:pdf-fill" class="align-middle fs-18">
             </iconify-icon>

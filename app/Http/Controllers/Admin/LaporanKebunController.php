@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Browsershot\Browsershot;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LaporanKebunController extends Controller
 {
@@ -44,10 +46,30 @@ class LaporanKebunController extends Controller
         ]);
     }
 
-    public function export_excel(Request $request)
+    public function export_excel(Request $request): BinaryFileResponse
     {
         $query = Kebun::query()->orderByDesc('created_at');
         $this->applyFilters($query, $request);
         return Excel::download(new KebunExport($query), 'laporan-kebun.xlsx');
+    }
+
+    public function export_pdf(Request $request): BinaryFileResponse
+    {
+        $query = Kebun::query()->orderByDesc('created_at');
+        $this->applyFilters($query, $request);
+        $pdfContent = view('pages.admin.laporan-kebun.laporan-pdf', [
+            'data' => $query->get(),
+        ])->render();
+
+        $nodeBinaryPath = env('NODE_BINARY_PATH');
+
+        Browsershot::html($pdfContent)
+            ->setIncludePath('$PATH:' . $nodeBinaryPath)
+            ->showBackground()
+            ->margins(0, 4, 0, 4)
+            ->format('A4')
+            ->save(storage_path('/app/public/laporan/laporan-kebun.pdf'));
+
+        return response()->file(storage_path('/app/public/laporan/laporan-kebun.pdf'));
     }
 }

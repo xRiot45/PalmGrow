@@ -11,7 +11,6 @@ use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Browsershot\Browsershot;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Spatie\LaravelPdf\Facades\Pdf;
 
 class LaporanPenggunaController extends Controller
 {
@@ -69,8 +68,10 @@ class LaporanPenggunaController extends Controller
             'data' => $query->get(),
         ])->render();
 
+        $nodeBinaryPath = env('NODE_BINARY_PATH');
+
         Browsershot::html($pdfContent)
-            ->setIncludePath('$PATH:/home/xriot/.nvm/versions/node/v18.20.4/bin/')
+            ->setIncludePath('$PATH:' . $nodeBinaryPath)
             ->showBackground()
             ->margins(0, 4, 0, 4)
             ->format('A4')

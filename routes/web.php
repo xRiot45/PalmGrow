@@ -125,6 +125,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::prefix('/laporan-kebun')->group(function () {
             Route::get('/', [AdminLaporanKebunController::class, 'index'])->name('admin.laporan-kebun.index');
             Route::get('/export-excel', [AdminLaporanKebunController::class, 'export_excel'])->name('admin.laporan-kebun.export_excel');
+            Route::get('/export-pdf', [AdminLaporanKebunController::class, 'export_pdf'])->name('admin.laporan-kebun.export_pdf');
         });
     });
 
