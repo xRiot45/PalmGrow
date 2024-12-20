@@ -1,4 +1,4 @@
-@extends('layouts.admin/app', ['title' => 'Tambah Laporan'])
+@extends('layouts.admin/app', ['title' => 'Tambah Laporan Kebun'])
 
 @section('css')
   @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
