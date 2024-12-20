@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DistribusiController as AdminDistribusiController;
 use App\Http\Controllers\Admin\KategoriPanenController as AdminKategoriPanenController;
 use App\Http\Controllers\Admin\KebunController as AdminKebunController;
-use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
+use App\Http\Controllers\Admin\LaporanKebunController as AdminLaporanKebunController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Admin\PenggunaController as AdminPenggunaController;
 use App\Http\Controllers\Admin\PetugasController as AdminPetugasController;
@@ -80,15 +80,15 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         });
 
         // Laporan (Admin)
-        Route::prefix('/laporan')->group(function () {
-            Route::get('/', [AdminLaporanController::class, 'index'])->name('admin.laporan.index');
-            Route::get('/view-pdf/{id}', [AdminLaporanController::class, 'view_pdf'])->name('admin.laporan.view_pdf');
-            Route::get('/download-pdf/{id}', [AdminLaporanController::class, 'download_pdf'])->name('admin.laporan.download_pdf');
-            Route::get('/tambah-laporan', [AdminLaporanController::class, 'create'])->name('admin.laporan.create');
-            Route::post('/tambah-laporan', [AdminLaporanController::class, 'store'])->name('admin.laporan.store');
-            Route::get('/edit-laporan/{id}', [AdminLaporanController::class, 'edit'])->name('admin.laporan.edit');
-            Route::put('/edit-laporan/{id}', [AdminLaporanController::class, 'update'])->name('admin.laporan.update');
-            Route::delete('/{id}', [AdminLaporanController::class, 'destroy'])->name('admin.laporan.destroy');
+        Route::prefix('/laporan')->group(callback: function () {
+            Route::get('/', [AdminLaporanKebunController::class, 'index'])->name('admin.laporan-kebun.index');
+            Route::get('/view-pdf/{id}', [AdminLaporanKebunController::class, 'view_pdf'])->name('admin.laporan-kebun.view_pdf');
+            Route::get('/download-pdf/{id}', [AdminLaporanKebunController::class, 'download_pdf'])->name('admin.laporan-kebun.download_pdf');
+            Route::get('/tambah-laporan', [AdminLaporanKebunController::class, 'create'])->name('admin.laporan-kebun.create');
+            Route::post('/tambah-laporan', [AdminLaporanKebunController::class, 'store'])->name('admin.laporan-kebun.store');
+            Route::get('/edit-laporan/{id}', [AdminLaporanKebunController::class, 'edit'])->name('admin.laporan-kebun.edit');
+            Route::put('/edit-laporan/{id}', [AdminLaporanKebunController::class, 'update'])->name('admin.laporan-kebun.update');
+            Route::delete('/{id}', [AdminLaporanKebunController::class, 'destroy'])->name('admin.laporan-kebun.destroy');
         });
 
         // Pembayaran (Admin)

@@ -110,7 +110,7 @@
 
       {{-- Laporan Kebun --}}
       <li class="nav-item pb-1">
-        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
+        <a class="nav-link" href="{{ route('admin.laporan-kebun.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="lsicon:report-filled"></iconify-icon>
           </span>
@@ -120,7 +120,7 @@
 
       {{-- Laporan Pengguna --}}
       <li class="nav-item pb-1">
-        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
+        <a class="nav-link" href="{{ route('admin.laporan-kebun.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="fa6-solid:users-viewfinder"></iconify-icon>
           </span>
