@@ -11,12 +11,12 @@
               <div class="d-flex flex-column h-100 justify-content-center">
 
                 <div class="auth-logo mb-4">
-                  <a class="logo-dark">
-                    <img src="/images/logo-dark.png" height="24" alt="logo dark">
+                  <a class="logo-dark" href="{{ route('index') }}">
+                    <img src="/images/logo-dark.png" height="100" alt="logo dark">
                   </a>
 
-                  <a class="logo-light">
-                    <img src="/images/logo-light.png" height="24" alt="logo light">
+                  <a class="logo-light" href="{{ route('index') }}">
+                    <img src="/images/logo-light.png" height="100" alt="logo light">
                   </a>
                 </div>
 

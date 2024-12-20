@@ -21,7 +21,7 @@ require __DIR__ . '/auth.php';
 
 Route::get('/', function () {
     return view('pages.index');
-});
+})->name('index');
 
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     // Route Admin

@@ -1,14 +1,24 @@
-{{-- Title Meta Start --}}
 <meta charset="utf-8" />
-<title>{{ $title ?? 'Sistem Informasi Perkebunan Kelapa Sawit' }} | Sistem Informasi Perkebunan
-  Kelapa Sawit</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ $title }} | PalmGrow - Sistem Informasi Perkebunan Kelapa Sawit</title>
+<meta name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="description"
-  content="
-Sistem Informasi Perkebunan Kelapa Sawit adalah platform digital yang dirancang untuk memantau dan mengelola seluruh aspek operasional perkebunan kelapa sawit. Sistem ini mencakup pengelolaan data terkait lahan, pemupukan, penanaman, panen, serta distribusi hasil perkebunan." />
-<meta name="author" content="Methia & Marsanda" />
+  content="PalmGrow adalah platform digital untuk memantau dan mengelola perkebunan kelapa sawit, mencakup data lahan, pemupukan, panen, dan distribusi hasil." />
+<meta name="keywords"
+  content="PalmGrow, Sistem Informasi Kelapa Sawit, Manajemen Perkebunan, Kelapa Sawit Digital, Pemupukan, Panen Kelapa Sawit, Distribusi Sawit" />
+<meta name="author" content="PalmGrow" />
+<meta name="robots" content="index, follow" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-{{-- Title Meta End --}}
+
+{{-- Open Graph Tags --}}
+<meta property="og:title"
+  content="{{ $title }} | PalmGrow - Sistem Informasi Perkebunan Kelapa Sawit" />
+<meta property="og:description"
+  content="PalmGrow adalah platform digital untuk memantau dan mengelola perkebunan kelapa sawit, mencakup data lahan, pemupukan, panen, dan distribusi hasil." />
+<meta property="og:image" content="URL_TO_IMAGE" />
+<meta property="og:url" content="URL_TO_PAGE" />
+<meta property="og:type" content="website" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 {{-- App Favicon --}}
-{{-- <link rel="shortcut icon" href="/images/favicon.ico"> --}}
+<link rel="shortcut icon" href="favicon.svg">

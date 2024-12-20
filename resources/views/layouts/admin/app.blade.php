@@ -21,7 +21,6 @@
 </head>
 
 <body>
-
   <div class="wrapper">
     @include('layouts.admin.partials/topbar', ['title' => $title])
     @include('layouts.admin.partials/left-sidebar')

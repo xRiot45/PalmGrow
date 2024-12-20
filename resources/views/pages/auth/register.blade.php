@@ -15,9 +15,13 @@
               <div class="d-flex flex-column h-100 justify-content-center">
 
                 <div class="auth-logo mb-4">
-                  <img src="/images/logo-dark.png" height="24" alt="logo dark">
+                  <a class="logo-dark" href="{{ route('index') }}">
+                    <img src="/images/logo-dark.png" height="100" alt="logo dark">
+                  </a>
 
-                  <img src="/images/logo-light.png" height="24" alt="logo light">
+                  <a class="logo-light" href="{{ route('index') }}">
+                    <img src="/images/logo-light.png" height="100" alt="logo light">
+                  </a>
                 </div>
 
                 <h2 class="fw-bold fs-24">Daftar</h2>

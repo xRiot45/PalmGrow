@@ -1,12 +1,12 @@
 <div class="main-nav">
   <!-- Sidebar Logo -->
   <div class="logo-box">
-    <a href="{{ route('admin.dashboard.index') }}" class="logo-dark">
+    <a href="{{ route('petugas.dashboard.index') }}" class="logo-dark">
       <img src="/images/logo-sm.png" class="logo-sm" alt="logo sm">
       <img src="/images/logo-dark.png" class="logo-lg" alt="logo dark">
     </a>
 
-    <a href="{{ route('admin.dashboard.index') }}" class="logo-light">
+    <a href="{{ route('petugas.dashboard.index') }}" class="logo-light">
       <img src="/images/logo-sm.png" class="logo-sm" alt="logo sm">
       <img src="/images/logo-light.png" class="logo-lg" alt="logo light">
     </a>

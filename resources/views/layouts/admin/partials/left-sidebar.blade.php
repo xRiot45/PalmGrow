@@ -21,7 +21,7 @@
   <div class="scrollbar" data-simplebar>
     <ul class="navbar-nav" id="navbar-nav">
 
-      <li class="menu-title">General</li>
+      <li class="menu-title">Menu</li>
 
       {{-- Dashboard --}}
       <li class="nav-item">
