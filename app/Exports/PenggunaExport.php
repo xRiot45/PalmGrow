@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Pengguna;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -10,22 +11,16 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class PenggunaExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $role;
+    private Builder $query;
 
-    public function __construct($role = null)
+    public function __construct(Builder $query)
     {
-        $this->role = $role;
+        $this->query = $query;
     }
 
     public function collection(): Collection
     {
-        $query = Pengguna::query();
-
-        if ($this->role) {
-            $query->where('role', 'like', '%' . $this->role  . '%');
-        }
-
-        return $query->get();
+        return $this->query->get();
     }
 
     public function headings(): array

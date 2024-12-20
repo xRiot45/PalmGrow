@@ -5,9 +5,7 @@ namespace App\Exports;
 use App\Models\Kebun;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
@@ -20,9 +18,8 @@ class KebunExport implements FromCollection, WithHeadings, WithMapping
         $this->query = $query;
     }
 
-    public function collection()
+    public function collection(): Collection
     {
-        // Use the filtered query to fetch the data
         return $this->query->get();
     }
 

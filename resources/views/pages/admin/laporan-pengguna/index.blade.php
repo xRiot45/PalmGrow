@@ -51,7 +51,7 @@
           <h4 class="card-title flex-grow-1">Daftar Pengguna</h4>
           <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
             {{-- Export Excel --}}
-            <a href="{{ route('admin.laporan-pengguna.export_excel', ['role' => $role]) }}"
+            <a href="{{ route('admin.laporan-pengguna.export_excel', request()->all()) }}"
               class="btn btn-md btn-success d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="icon-park-outline:excel" class="align-middle fs-18"></iconify-icon>
               Export Excel
@@ -59,7 +59,7 @@
 
 
             {{-- Export PDF --}}
-            <a href="{{ route('admin.laporan-pengguna.export_pdf', ['role' => $role]) }}"
+            <a href="{{ route('admin.laporan-pengguna.export_pdf', request()->all()) }}"
               class="btn btn-md btn-danger d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="mingcute:pdf-fill" class="align-middle fs-18">
               </iconify-icon>

@@ -29,34 +29,22 @@ class LaporanPenggunaController extends Controller
     public function index(Request $request): View
     {
         $perPage = $request->input('perPage', 10);
-        $role = $request->input('role');
-        $data = [];
-        $pagination = null;
+        $query = Pengguna::query()->orderByDesc('created_at');
+        $this->applyFilters($query, $request);
 
-        if ($role) {
-            $query = Pengguna::query()->orderByDesc('created_at');
-            $this->applyFilters($query, $request);
-            $pagination = $query->paginate($perPage)->appends($request->except('page'));
-            $data = $pagination->items();
-        } else {
-            $query = Pengguna::query()->orderByDesc('created_at');
-            $this->applyFilters($query, $request);
-            $pagination = $query->paginate($perPage)->appends($request->except('page'));
-            $data = $pagination->items();
-        }
-
+        $pengguna = $query->paginate($perPage)->appends($request->except('page'));
         return view('pages.admin.laporan-pengguna.index', [
-            'data' => $data,
-            'pagination' => $pagination,
+            'data' => $pengguna->items(),
+            'pagination' => $pengguna,
             'perPage' => $perPage,
-            'role' => $role,
         ]);
     }
 
     public function export_excel(Request $request): BinaryFileResponse
     {
-        $role = $request->input('role');
-        return Excel::download(new PenggunaExport($role), 'Laporan Pengguna.xlsx');
+        $query = Pengguna::query()->orderByDesc('created_at');
+        $this->applyFilters($query, $request);
+        return Excel::download(new PenggunaExport($query), 'Laporan Pengguna.xlsx');
     }
 
     public function export_pdf(Request $request): BinaryFileResponse
