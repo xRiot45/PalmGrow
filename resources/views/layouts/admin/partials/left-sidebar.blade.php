@@ -86,16 +86,6 @@
         </a>
       </li>
 
-      {{-- Laporan Kebun --}}
-      <li class="nav-item py-1">
-        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
-          <span class="nav-icon">
-            <iconify-icon icon="lsicon:report-filled"></iconify-icon>
-          </span>
-          <span class="nav-text"> Laporan Kebun </span>
-        </a>
-      </li>
-
       {{-- Pembayaran --}}
       <li class="nav-item py-1">
         <a class="nav-link" href="{{ route('admin.pembayaran.index') }}">
@@ -113,6 +103,28 @@
             <iconify-icon icon="material-symbols:category"></iconify-icon>
           </span>
           <span class="nav-text"> Kategori Panen </span>
+        </a>
+      </li>
+
+      <li class="menu-title mt-3">Laporan</li>
+
+      {{-- Laporan Kebun --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="lsicon:report-filled"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Kebun </span>
+        </a>
+      </li>
+
+      {{-- Laporan Pengguna --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="fa6-solid:users-viewfinder"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Pengguna </span>
         </a>
       </li>
     </ul>
