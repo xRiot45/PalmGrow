@@ -117,6 +117,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         Route::prefix('/laporan-pengguna')->group(function () {
             Route::get('/', [AdminLaporanPenggunaController::class, 'index'])->name('admin.laporan-pengguna.index');
             Route::get('/export-excel', [AdminLaporanPenggunaController::class, 'export_excel'])->name('admin.laporan-pengguna.export_excel');
+            Route::get('/export-pdf', [AdminLaporanPenggunaController::class, 'export_pdf'])->name('admin.laporan-pengguna.export_pdf');
         });
     });
 

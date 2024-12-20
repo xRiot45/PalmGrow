@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\Role;
 use App\Exports\PenggunaExport;
 use App\Http\Controllers\Controller;
 use App\Models\Pengguna;
@@ -10,7 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Browsershot\Browsershot;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class LaporanPenggunaController extends Controller
 {
@@ -38,8 +39,12 @@ class LaporanPenggunaController extends Controller
             $this->applyFilters($query, $request);
             $pagination = $query->paginate($perPage)->appends($request->except('page'));
             $data = $pagination->items();
+        } else {
+            $query = Pengguna::query()->orderByDesc('created_at');
+            $this->applyFilters($query, $request);
+            $pagination = $query->paginate($perPage)->appends($request->except('page'));
+            $data = $pagination->items();
         }
-
 
         return view('pages.admin.laporan-pengguna.index', [
             'data' => $data,
@@ -53,5 +58,24 @@ class LaporanPenggunaController extends Controller
     {
         $role = $request->input('role');
         return Excel::download(new PenggunaExport($role), 'Laporan Pengguna.xlsx');
+    }
+
+    public function export_pdf(Request $request): BinaryFileResponse
+    {
+        $query = Pengguna::query()->orderByDesc('created_at');
+        $this->applyFilters($query, $request);
+
+        $pdfContent = view('pages.admin.laporan-pengguna.laporan-pdf', [
+            'data' => $query->get(),
+        ])->render();
+
+        Browsershot::html($pdfContent)
+            ->setIncludePath('$PATH:/home/xriot/.nvm/versions/node/v18.20.4/bin/')
+            ->showBackground()
+            ->margins(0, 4, 0, 4)
+            ->format('A4')
+            ->save(storage_path('/app/public/laporan/laporan-pengguna.pdf'));
+
+        return response()->file(storage_path('/app/public/laporan/laporan-pengguna.pdf'));
     }
 }

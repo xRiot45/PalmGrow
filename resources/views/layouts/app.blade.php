@@ -10,7 +10,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
-<body class="h-100">
+<body class="h-100 bg-white">
   @yield('content')
   @vite(['resources/js/app.js', 'resources/js/layout.js'])
 </body>

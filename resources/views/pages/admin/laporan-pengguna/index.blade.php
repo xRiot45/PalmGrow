@@ -3,7 +3,7 @@
 
 @section('content')
   <div>
-    <form action="{{ route('admin.laporan-pengguna.index') }}" method="POST">
+    <form action="{{ route('admin.laporan-pengguna.index') }}" method="POST" class="card p-3">
       @csrf
       @method('GET')
       {{-- Role Start --}}
@@ -30,7 +30,7 @@
 
       <div class="w-100 d-flex gap-1 justify-content-end">
         <a href="{{ route('admin.laporan-pengguna.index') }}"
-          class="btn btn-md btn-secondary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
+          class="btn btn-md btn-blue d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
           <iconify-icon icon="ic:baseline-refresh" class="align-middle fs-18">
           </iconify-icon>
           Refresh Data
@@ -40,12 +40,13 @@
           class="btn btn-primary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
           <iconify-icon icon="ic:sharp-person-search" class="align-middle fs-18">
           </iconify-icon>
-          Cari Pengguna</button>
+          Cari Pengguna
+        </button>
       </div>
     </form>
 
     @if (!empty($data) && count($data) > 0)
-      <div class="card mt-5">
+      <div class="card mt-3">
         <div class="card-header d-lg-flex justify-content-between align-items-center gap-1">
           <h4 class="card-title flex-grow-1">Daftar Pengguna</h4>
           <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
@@ -58,7 +59,7 @@
 
 
             {{-- Export PDF --}}
-            <a href="{{ route('admin.pengguna.index') }}"
+            <a href="{{ route('admin.laporan-pengguna.export_pdf', ['role' => $role]) }}"
               class="btn btn-md btn-danger d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="mingcute:pdf-fill" class="align-middle fs-18">
               </iconify-icon>
