@@ -40,11 +40,11 @@ class LaporanPenggunaController extends Controller
         ]);
     }
 
-    public function export_excel(Request $request): BinaryFileResponse
+    public function export_csv(Request $request): BinaryFileResponse
     {
         $query = Pengguna::query()->orderByDesc('created_at');
         $this->applyFilters($query, $request);
-        return Excel::download(new PenggunaExport($query), 'Laporan Pengguna.xlsx');
+        return Excel::download(new PenggunaExport($query), 'Laporan Pengguna.csv');
     }
 
     public function export_pdf(Request $request): BinaryFileResponse

@@ -13,6 +13,7 @@
           <th class="text-white">Nama Pengguna</th>
           <th class="text-white">Email</th>
           <th class="text-white">Role</th>
+          <th class="text-white">Didaftarkan Pada</th>
         </tr>
       </thead>
 
@@ -32,6 +33,7 @@
                 <span class="badge bg-secondary">Role Tidak Dikenal</span>
               @endif
             </td>
+            <td> {{ $pengguna->created_at->format('Y-m-d') }} </td>
           </tr>
         @endforeach
       </tbody>
