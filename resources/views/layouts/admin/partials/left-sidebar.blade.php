@@ -139,6 +139,16 @@
           <span class="nav-text"> Laporan Kebun </span>
         </a>
       </li>
+
+      {{-- Laporan Petugas --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan-kebun.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="clarity:employee-group-solid"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Petugas </span>
+        </a>
+      </li>
     </ul>
   </div>
 </div>
