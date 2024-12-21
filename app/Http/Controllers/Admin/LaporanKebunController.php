@@ -46,11 +46,11 @@ class LaporanKebunController extends Controller
         ]);
     }
 
-    public function export_excel(Request $request): BinaryFileResponse
+    public function export_csv(Request $request): BinaryFileResponse
     {
         $query = Kebun::query()->orderByDesc('created_at');
         $this->applyFilters($query, $request);
-        return Excel::download(new KebunExport($query), 'laporan-kebun.xlsx');
+        return Excel::download(new KebunExport($query), 'Laporan Kebun.csv');
     }
 
     public function export_pdf(Request $request): BinaryFileResponse

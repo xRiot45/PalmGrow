@@ -15,6 +15,7 @@
           <th class="text-white">Status</th>
           <th class="text-white">Tanggal Tanam</th>
           <th class="text-white">Tanggal Panen</th>
+          <th class="text-white">Didaftarkan Pada</th>
         </tr>
       </thead>
 
@@ -34,6 +35,7 @@
             </td>
             <td>{{ $kebun->tanggal_tanam->format('Y-m-d') }}</td>
             <td>{{ $kebun->tanggal_panen->format('Y-m-d') }}</td>
+            <td> {{ $kebun->created_at->format('Y-m-d') }} </td>
           </tr>
         @endforeach
       </tbody>

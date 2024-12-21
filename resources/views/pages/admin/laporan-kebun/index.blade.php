@@ -84,11 +84,11 @@
       <div class="card-header d-lg-flex justify-content-between align-items-center gap-1">
         <h4 class="card-title flex-grow-1">Daftar Kebun</h4>
         <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
-          {{-- Export Excel --}}
-          <a href="{{ route('admin.laporan-kebun.export_excel', request()->all()) }}"
+          {{-- Export CSV --}}
+          <a href="{{ route('admin.laporan-kebun.export_csv', request()->all()) }}"
             class="btn btn-md btn-success d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
-            <iconify-icon icon="icon-park-outline:excel" class="align-middle fs-18"></iconify-icon>
-            Export Excel
+            <iconify-icon icon="teenyicons:csv-solid" class="align-middle fs-18"></iconify-icon>
+            Export CSV
           </a>
 
 
