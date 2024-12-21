@@ -1,35 +1,48 @@
-@extends('layouts.admin/app', ['title' => 'Laporan Pengguna'])
+@extends('layouts.admin/app', ['title' => 'Laporan Petugas'])
 
 
 @section('content')
   <div>
-    <form action="{{ route('admin.laporan-pengguna.index') }}" method="POST" class="card p-3">
+    <form action="{{ route('admin.laporan-petugas.index') }}" method="POST" class="card p-3">
       @csrf
       @method('GET')
-      {{-- Role Start --}}
+      {{-- Input Nama Petugas --}}
       <div class="mb-3">
-        <label class="form-label" for="role">Role</label>
-        <select name="role" id="role" class="form-control py-2" aria-label="Pilih Role"
-          data-choices data-choices-search-false data-choices-removeItem>
-          <option value="">-- Pilih Role Pengguna --</option>
-          <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>
-            Admin
-          </option>
-          <option value="Petugas Kebun" {{ old('role') == 'Petugas Kebun' ? 'selected' : '' }}>
-            Petugas Kebun
-          </option>
-          <option value="Manajer" {{ old('role') == 'Manajer' ? 'selected' : '' }}>
-            Manajer
-          </option>
-        </select>
-        @error('role')
-          <div class="text-danger">{{ $message }}</div>
-        @enderror
+        <label class="form-label" for="nama_petugas">Nama Petugas</label>
+        <input type="text" id="nama_petugas" name="nama_petugas" class="form-control"
+          value="{{ request()->get('nama_petugas') }}" placeholder="Masukkan nama petugas">
       </div>
-      {{-- Role End --}}
 
+      {{-- Input Jabatan --}}
+      <div class="mb-3">
+        <label class="form-label" for="jabatan">Jabatan</label>
+        <input type="text" id="jabatan" name="jabatan" class="form-control"
+          value="{{ request()->get('jabatan') }}" placeholder="Masukkan jabatan">
+      </div>
+
+      {{-- Tanggal Bergabung --}}
+      <div class="d-flex gap-2">
+        <div class="mb-3 w-100">
+          <label class="form-label" for="tanggal_bergabung_mulai">
+            Tanggal Bergabung Mulai
+          </label>
+          <input type="date" id="tanggal_bergabung_mulai" class="form-control"
+            placeholder="-- Pilih Tanggal --" name="tanggal_bergabung_mulai"
+            value="{{ request()->get('tanggal_bergabung_mulai') }}">
+        </div>
+        <div class="mb-3 w-100">
+          <label class="form-label" for="tanggal_bergabung_selesai">
+            Tanggal Bergabung Selesai
+          </label>
+          <input type="date" id="tanggal_bergabung_selesai" class="form-control"
+            placeholder="-- Pilih Tanggal --" name="tanggal_bergabung_selesai"
+            value="{{ request()->get('tanggal_bergabung_selesai') }}">
+        </div>
+      </div>
+
+      {{-- Button Submit --}}
       <div class="w-100 d-flex gap-1 justify-content-end">
-        <a href="{{ route('admin.laporan-pengguna.index') }}"
+        <a href="{{ route('admin.laporan-petugas.index') }}"
           class="btn btn-md btn-blue d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
           <iconify-icon icon="ic:baseline-refresh" class="align-middle fs-18">
           </iconify-icon>
@@ -40,7 +53,7 @@
           class="btn btn-primary d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
           <iconify-icon icon="bx:search-alt" class="align-middle fs-18">
           </iconify-icon>
-          Cari Pengguna
+          Cari Petugas
         </button>
       </div>
     </form>
@@ -51,15 +64,15 @@
           <h4 class="card-title flex-grow-1">Daftar Pengguna</h4>
           <div class="d-flex flex-wrap  gap-1 mt-lg-0 mt-3">
             {{-- Export Excel --}}
-            <a href="{{ route('admin.laporan-pengguna.export_excel', request()->all()) }}"
+            <a href="{{ route('admin.laporan-petugas.export_csv', request()->all()) }}"
               class="btn btn-md btn-success d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
-              <iconify-icon icon="icon-park-outline:excel" class="align-middle fs-18"></iconify-icon>
-              Export Excel
+              <iconify-icon icon="teenyicons:csv-solid" class="align-middle fs-18"></iconify-icon>
+              Export CSV
             </a>
 
 
             {{-- Export PDF --}}
-            <a href="{{ route('admin.laporan-pengguna.export_pdf', request()->all()) }}"
+            <a href="{{ route('admin.laporan-petugas.export_pdf', request()->all()) }}"
               class="btn btn-md btn-danger d-flex justify-content-center align-items-center gap-1 mb-md-0 mb-2">
               <iconify-icon icon="mingcute:pdf-fill" class="align-middle fs-18">
               </iconify-icon>
@@ -76,8 +89,10 @@
             <thead class="bg-light-subtle">
               <tr>
                 <th class="px-4">No</th>
-                <th>Nama Pengguna</th>
                 <th>Email</th>
+                <th>Nama Petugas</th>
+                <th>Jabatan</th>
+                <th>Tanggal Bergabung</th>
                 <th>Role</th>
               </tr>
             </thead>
@@ -87,32 +102,38 @@
             <tbody>
               @if (empty($data))
                 <tr>
-                  <td colspan="4" class="text-center">
+                  <td colspan="7" class="text-center">
                     <img src="/images/404-error.png" alt="Not Found Img" class="w-25 h-25">
                     <h4 class="fw-bold">Data Tidak Ditemukan</h4>
                   </td>
                 </tr>
               @else
-                @foreach ($data as $index => $pengguna)
+                @foreach ($data as $index => $petugas)
                   <tr>
                     {{-- No --}}
                     <td class="px-4">
                       {{ $loop->iteration + ($pagination->currentPage() - 1) * $pagination->perPage() }}
                     </td>
 
-                    {{-- Nama Pengguna --}}
-                    <td> {{ $pengguna->name }} </td>
-
                     {{-- Email --}}
-                    <td>{{ $pengguna->email }}</td>
+                    <td>{{ $petugas->pengguna->email }}</td>
+
+                    {{-- Nama Petugas --}}
+                    <td> {{ $petugas->nama_petugas }} </td>
+
+                    {{-- Jabatan --}}
+                    <td> {{ $petugas->jabatan }} </td>
+
+                    {{-- Tanggal Bergabung --}}
+                    <td> {{ $petugas->tanggal_bergabung->format('Y-m-d') }} </td>
 
                     {{-- Role --}}
                     <td>
-                      @if ($pengguna->role->value === 'Admin')
+                      @if ($petugas->pengguna->role->value === 'Admin')
                         <span class="badge bg-primary">Admin</span>
-                      @elseif ($pengguna->role->value === 'Petugas Kebun')
+                      @elseif ($petugas->pengguna->role->value === 'Petugas Kebun')
                         <span class="badge bg-info">Petugas Kebun</span>
-                      @elseif ($pengguna->role->value === 'Manajer')
+                      @elseif ($petugas->pengguna->role->value === 'Manajer')
                         <span class="badge bg-danger">Manajer</span>
                       @else
                         <span class="badge bg-secondary">Role Tidak Dikenal</span>

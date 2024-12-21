@@ -142,7 +142,7 @@
 
       {{-- Laporan Petugas --}}
       <li class="nav-item pb-1">
-        <a class="nav-link" href="{{ route('admin.laporan-kebun.index') }}">
+        <a class="nav-link" href="{{ route('admin.laporan-petugas.index') }}">
           <span class="nav-icon">
             <iconify-icon icon="clarity:employee-group-solid"></iconify-icon>
           </span>
