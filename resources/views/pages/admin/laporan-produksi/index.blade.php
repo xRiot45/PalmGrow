@@ -202,7 +202,7 @@
         <nav aria-label="Page navigation example"
           class="d-lg-flex justify-content-lg-between align-items-center text-center">
           <div class="d-flex flex-wrap gap-2 justify-content-center mb-lg-0 mb-3">
-            <form action="{{ route('admin.produksi.index') }}" method="POST"
+            <form action="{{ route('admin.laporan-produksi.index') }}" method="POST"
               class="d-flex align-items-center gap-2 justify-content-center flex-wrap">
               @csrf
               @method('GET')
