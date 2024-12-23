@@ -1,9 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Edit Kebun'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
 @section('content')
   <form action="{{ route('admin.kebun.update', $data->id) }}" method="POST">
     @csrf

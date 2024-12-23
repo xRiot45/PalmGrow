@@ -1,6 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Tambah Distribusi'])
 
-
 @section('content')
   <form action="{{ route('admin.distribusi.store') }}" method="POST">
     @csrf

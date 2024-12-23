@@ -1,6 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Edit Distribusi'])
 
-
 @section('content')
   <form action="{{ route('admin.distribusi.update', $data->id) }}') }}" method="POST">
     @csrf

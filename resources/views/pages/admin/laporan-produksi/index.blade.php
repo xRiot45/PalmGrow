@@ -12,10 +12,7 @@
           data-choices data-choices-search-true data-choices-removeItem>
           <option value="">-- Pilih Lokasi Kebun --</option>
           @foreach ($lokasi_kebun as $lokasi)
-            <option value="{{ $lokasi->lokasi }}"
-              {{ request()->get('lokasi_kebun') == $lokasi->lokasi ? 'selected' : '' }}>
-              {{ $lokasi->lokasi }}
-            </option>
+            <option value="{{ $lokasi }}">{{ $lokasi }}</option>
           @endforeach
         </select>
       </div>

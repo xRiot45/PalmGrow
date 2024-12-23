@@ -50,7 +50,7 @@ class LaporanProduksiController extends Controller
         $this->applyFilters($query, request());
 
         $produksi = $query->paginate($perPage)->appends($request->except('page'));
-        $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
+        $lokasi_kebun = Kebun::pluck('lokasi')->all();
 
         return view('pages.admin.laporan-produksi.index', [
             'data' => $produksi->items(),

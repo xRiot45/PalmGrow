@@ -1,10 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Tambah Pembayaran'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
-
 @section('content')
   <form action="{{ route('admin.pembayaran.store') }}" method="POST" enctype="multipart/form-data">
     @csrf

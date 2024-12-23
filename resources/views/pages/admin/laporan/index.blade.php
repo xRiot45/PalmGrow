@@ -1,9 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Laporan'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
 @section('content')
   <div class="row">
     <div class="col-xl-12">
@@ -59,10 +55,7 @@
                           data-choices-removeItem>
                           <option value="">-- Pilih Lokasi Kebun --</option>
                           @foreach ($lokasi_kebun as $lokasi)
-                            <option value="{{ $lokasi->lokasi }}"
-                              {{ request()->get('lokasi_kebun') == $lokasi->lokasi ? 'selected' : '' }}>
-                              {{ $lokasi->lokasi }}
-                            </option>
+                            <option value="{{ $lokasi }}">{{ $lokasi }}</option>
                           @endforeach
                         </select>
                       </div>

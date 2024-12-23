@@ -1,10 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Edit Pembayaran'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
-
 @section('content')
   <form action="{{ route('admin.pembayaran.update', $data->id) }}" method="POST"
     enctype="multipart/form-data">

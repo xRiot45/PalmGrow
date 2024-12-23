@@ -48,7 +48,7 @@ class ProduksiController extends Controller
         $this->applyFilters($query, request());
 
         $produksi = $query->paginate($perPage)->appends($request->except('page'));
-        $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
+        $lokasi_kebun = Kebun::pluck('lokasi')->all();
 
         return view('pages.admin.produksi.index', [
             'data' => $produksi->items(),

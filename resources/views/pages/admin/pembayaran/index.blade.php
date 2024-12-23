@@ -62,8 +62,7 @@
                           data-choices-search-true data-choices-removeItem>
                           <option value="">-- Pilih Lokasi Kebun Produksi --</option>
                           @foreach ($lokasi_produksi_kebun as $lokasi)
-                            <option value="{{ $lokasi->kebun->lokasi }}">{{ $lokasi->kebun->lokasi }}
-                            </option>
+                            <option value="{{ $lokasi }}">{{ $lokasi }}</option>
                           @endforeach
                         </select>
                       </div>

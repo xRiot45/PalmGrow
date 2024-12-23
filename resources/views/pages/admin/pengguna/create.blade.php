@@ -1,10 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Tambah Pengguna'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
-
 @section('content')
   <form method="POST" action="{{ route('admin.pengguna.store') }}" class="authentication-form">
     @csrf

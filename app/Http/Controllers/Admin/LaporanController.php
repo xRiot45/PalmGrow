@@ -40,7 +40,7 @@ class LaporanController extends Controller
         $this->applyFilters($query, request());
 
         $laporan = $query->paginate($perPage)->appends($request->except('page'));
-        $lokasi_kebun = Kebun::select('id', 'lokasi')->get();
+        $lokasi_kebun = Kebun::pluck('lokasi')->all();
         return view('pages.admin.laporan.index', [
             'data' => $laporan->items(),
             'pagination' => $laporan,

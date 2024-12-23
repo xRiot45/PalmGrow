@@ -1,6 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Distribusi'])
 
-
 @section('content')
   <div class="row">
     <div class="col-xl-12">

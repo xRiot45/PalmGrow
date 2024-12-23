@@ -1,6 +1,5 @@
 @extends('layouts.admin/app', ['title' => 'Tambah Kategori Panen'])
 
-
 @section('content')
   <form action="{{ route('admin.kategori-panen.store') }}" method="POST">
     @csrf

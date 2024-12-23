@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\PembayaranExport;
 use App\Http\Controllers\Controller;
+use App\Models\Kebun;
 use App\Models\Pembayaran;
 use App\Models\Produksi;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,7 +46,7 @@ class LaporanPembayaranController extends Controller
         $this->applyFilters($query, request());
 
         $pembayaran = $query->paginate($perPage)->appends($request->except('page'));
-        $lokasi_produksi_kebun = Produksi::select('id', 'kebun_id')->get();
+        $lokasi_produksi_kebun = Kebun::pluck('lokasi')->all();
         return view('pages.admin.laporan-pembayaran.index', [
             'data' => $pembayaran->items(),
             'pagination' => $pembayaran,
