@@ -149,6 +149,16 @@
           <span class="nav-text"> Laporan Petugas </span>
         </a>
       </li>
+
+      {{-- Laporan Distribusi --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan-distribusi.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="hugeicons:distribution"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Distribusi </span>
+        </a>
+      </li>
     </ul>
   </div>
 </div>

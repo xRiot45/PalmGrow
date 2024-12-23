@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProduksiController as AdminProduksiController;
 use App\Http\Controllers\Admin\LaporanPenggunaController as AdminLaporanPenggunaController;
 use App\Http\Controllers\Admin\LaporanKebunController as AdminLaporanKebunController;
 use App\Http\Controllers\Admin\LaporanPetugasController as AdminLaporanPetugasController;
+use App\Http\Controllers\Admin\LaporanDistribusiController as AdminLaporanDistribusiController;
 
 // Import Petugas Controller
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
@@ -83,16 +84,18 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
         });
 
         // Laporan (Admin)
-        Route::prefix('/laporan')->group(callback: function () {
-            Route::get('/', [AdminLaporanController::class, 'index'])->name('admin.laporan.index');
-            Route::get('/view-pdf/{id}', [AdminLaporanController::class, 'view_pdf'])->name('admin.laporan.view_pdf');
-            Route::get('/download-pdf/{id}', [AdminLaporanController::class, 'download_pdf'])->name('admin.laporan.download_pdf');
-            Route::get('/tambah-laporan', [AdminLaporanController::class, 'create'])->name('admin.laporan.create');
-            Route::post('/tambah-laporan', [AdminLaporanController::class, 'store'])->name('admin.laporan.store');
-            Route::get('/edit-laporan/{id}', [AdminLaporanController::class, 'edit'])->name('admin.laporan.edit');
-            Route::put('/edit-laporan/{id}', [AdminLaporanController::class, 'update'])->name('admin.laporan.update');
-            Route::delete('/{id}', [AdminLaporanController::class, 'destroy'])->name('admin.laporan.destroy');
-        });
+        Route::prefix('/laporan')->group(
+            callback: function () {
+                Route::get('/', [AdminLaporanController::class, 'index'])->name('admin.laporan.index');
+                Route::get('/view-pdf/{id}', [AdminLaporanController::class, 'view_pdf'])->name('admin.laporan.view_pdf');
+                Route::get('/download-pdf/{id}', [AdminLaporanController::class, 'download_pdf'])->name('admin.laporan.download_pdf');
+                Route::get('/tambah-laporan', [AdminLaporanController::class, 'create'])->name('admin.laporan.create');
+                Route::post('/tambah-laporan', [AdminLaporanController::class, 'store'])->name('admin.laporan.store');
+                Route::get('/edit-laporan/{id}', [AdminLaporanController::class, 'edit'])->name('admin.laporan.edit');
+                Route::put('/edit-laporan/{id}', [AdminLaporanController::class, 'update'])->name('admin.laporan.update');
+                Route::delete('/{id}', [AdminLaporanController::class, 'destroy'])->name('admin.laporan.destroy');
+            },
+        );
 
         // Pembayaran (Admin)
         Route::prefix('/pembayaran')->group(function () {
@@ -134,6 +137,13 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::get('/', [AdminLaporanPetugasController::class, 'index'])->name('admin.laporan-petugas.index');
             Route::get('/export-csv', [AdminLaporanPetugasController::class, 'export_csv'])->name('admin.laporan-petugas.export_csv');
             Route::get('/export-pdf', [AdminLaporanPetugasController::class, 'export_pdf'])->name('admin.laporan-petugas.export_pdf');
+        });
+
+        // Laporan Distribusi (Admin)
+        Route::prefix('/laporan-distribusi')->group(function () {
+            Route::get('/', [AdminLaporanDistribusiController::class, 'index'])->name('admin.laporan-distribusi.index');
+            Route::get('/export-csv', [AdminLaporanDistribusiController::class, 'export_csv'])->name('admin.laporan-distribusi.export_csv');
+            Route::get('/export-pdf', [AdminLaporanDistribusiController::class, 'export_pdf'])->name('admin.laporan-distribusi.export_pdf');
         });
     });
 
