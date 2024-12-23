@@ -122,7 +122,6 @@
               <th>Tanggal Distribusi</th>
               <th>Lokasi Kebun</th>
               <th>Tanggal Produksi</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           {{-- Table Head End --}}
@@ -158,62 +157,6 @@
 
                   {{-- Tanggal Produksi --}}
                   <td>{{ $distribusi->produksi->tanggal_produksi->format('Y-m-d') }}</td>
-
-
-                  {{-- Button Aksi --}}
-                  <td>
-                    <div class="d-flex gap-2">
-                      <a href="{{ route('admin.distribusi.edit', [$distribusi->id]) }}"
-                        class="btn btn-soft-primary btn-sm" data-bs-toggle="tooltip"
-                        data-bs-placement="top" data-bs-title="Edit Data">
-                        <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18">
-                        </iconify-icon>
-                      </a>
-                      <button type="button" class="btn btn-soft-danger btn-sm"
-                        data-bs-toggle="modal" data-bs-target="#hapusDataModal">
-                        <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
-                          class="align-middle fs-18">
-                        </iconify-icon>
-                      </button>
-                    </div>
-                  </td>
-
-                  {{-- Modal Hapus Data Start --}}
-                  <div class="modal fade" id="hapusDataModal" tabindex="-1"
-                    aria-labelledby="hapusDataModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        {{-- Modal Body Start --}}
-                        <div class="modal-body">
-                          <form action="{{ route('admin.distribusi.destroy', $distribusi->id) }}"
-                            method="POST">
-                            @csrf
-                            @method('DELETE')
-
-                            <div class="text-center">
-                              <img src="/images/delete.png" alt="Not Found Img"
-                                class="w-100 h-100">
-                              <h4 class="fw-bold">Hapus Data Distribusi</h4>
-                              <p class="text-muted">
-                                Anda yakin ingin menghapus data distribusi ini?
-                              </p>
-                            </div>
-
-                            {{-- Button Submit --}}
-                            <div class="w-100 d-flex gap-2 justify-content-center mt-3">
-                              <button type="button" class="btn btn-secondary w-100 py-2"
-                                data-bs-dismiss="modal">Tutup</button>
-                              <button type="submit" class="btn btn-primary w-100 py-2">Hapus
-                                Data</button>
-                            </div>
-                          </form>
-                        </div>
-                        {{-- Modal Body End --}}
-                      </div>
-                    </div>
-                  </div>
-
-                  {{-- Modal Hapus Data End --}}
                 </tr>
               @endforeach
             @endif
