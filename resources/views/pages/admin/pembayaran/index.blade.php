@@ -190,10 +190,10 @@
                     <td>{{ $pembayaran->tanggal_pembayaran->format('Y-m-d') }}</td>
 
                     {{-- Jumlah Tandan --}}
-                    <td>{{ $pembayaran->produksi->jumlah_tandan }}</td>
+                    <td>{{ $pembayaran->produksi->jumlah_tandan }} Tandan</td>
 
                     {{-- Berat Total --}}
-                    <td>{{ $pembayaran->produksi->berat_total }}</td>
+                    <td>{{ $pembayaran->produksi->berat_total }} Kg</td>
 
 
                     {{-- Metode Pembayaran --}}
