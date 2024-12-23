@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\LaporanKebunController as AdminLaporanKebunContro
 use App\Http\Controllers\Admin\LaporanPetugasController as AdminLaporanPetugasController;
 use App\Http\Controllers\Admin\LaporanProduksiController as AdminLaporanProduksiController;
 use App\Http\Controllers\Admin\LaporanDistribusiController as AdminLaporanDistribusiController;
+use App\Http\Controllers\Admin\LaporanPembayaranController as AdminLaporanPembayaranController;
 
 // Import Petugas Controller
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
@@ -152,6 +153,13 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::get('/', [AdminLaporanDistribusiController::class, 'index'])->name('admin.laporan-distribusi.index');
             Route::get('/export-csv', [AdminLaporanDistribusiController::class, 'export_csv'])->name('admin.laporan-distribusi.export_csv');
             Route::get('/export-pdf', [AdminLaporanDistribusiController::class, 'export_pdf'])->name('admin.laporan-distribusi.export_pdf');
+        });
+
+        // Laporan Pembayaran (Admin)
+        Route::prefix('/laporan-pembayaran')->group(function () {
+            Route::get('/', [AdminLaporanPembayaranController::class, 'index'])->name('admin.laporan-pembayaran.index');
+            Route::get('/export-csv', [AdminLaporanPembayaranController::class, 'export_csv'])->name('admin.laporan-pembayaran.export_csv');
+            Route::get('/export-pdf', [AdminLaporanPembayaranController::class, 'export_pdf'])->name('admin.laporan-pembayaran.export_pdf');
         });
     });
 

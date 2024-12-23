@@ -169,6 +169,16 @@
           <span class="nav-text"> Laporan Distribusi </span>
         </a>
       </li>
+
+      {{-- Laporan Pembayaran --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan-pembayaran.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="tabler:cash-register"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Pembayaran </span>
+        </a>
+      </li>
     </ul>
   </div>
 </div>
