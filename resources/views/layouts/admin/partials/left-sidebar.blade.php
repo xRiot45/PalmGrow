@@ -150,6 +150,16 @@
         </a>
       </li>
 
+      {{-- Laporan Produksi --}}
+      <li class="nav-item pb-1">
+        <a class="nav-link" href="{{ route('admin.laporan-produksi.index') }}">
+          <span class="nav-icon">
+            <iconify-icon icon="fluent:production-checkmark-24-filled"></iconify-icon>
+          </span>
+          <span class="nav-text"> Laporan Produksi </span>
+        </a>
+      </li>
+
       {{-- Laporan Distribusi --}}
       <li class="nav-item pb-1">
         <a class="nav-link" href="{{ route('admin.laporan-distribusi.index') }}">

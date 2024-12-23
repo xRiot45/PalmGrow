@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProduksiController as AdminProduksiController;
 use App\Http\Controllers\Admin\LaporanPenggunaController as AdminLaporanPenggunaController;
 use App\Http\Controllers\Admin\LaporanKebunController as AdminLaporanKebunController;
 use App\Http\Controllers\Admin\LaporanPetugasController as AdminLaporanPetugasController;
+use App\Http\Controllers\Admin\LaporanProduksiController as AdminLaporanProduksiController;
 use App\Http\Controllers\Admin\LaporanDistribusiController as AdminLaporanDistribusiController;
 
 // Import Petugas Controller
@@ -137,6 +138,13 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
             Route::get('/', [AdminLaporanPetugasController::class, 'index'])->name('admin.laporan-petugas.index');
             Route::get('/export-csv', [AdminLaporanPetugasController::class, 'export_csv'])->name('admin.laporan-petugas.export_csv');
             Route::get('/export-pdf', [AdminLaporanPetugasController::class, 'export_pdf'])->name('admin.laporan-petugas.export_pdf');
+        });
+
+        // Laporan Produksi (Admin)
+        Route::prefix('/laporan-produksi')->group(function () {
+            Route::get('/', [AdminLaporanProduksiController::class, 'index'])->name('admin.laporan-produksi.index');
+            Route::get('/export-csv', [AdminLaporanProduksiController::class, 'export_csv'])->name('admin.laporan-produksi.export_csv');
+            Route::get('/export-pdf', [AdminLaporanProduksiController::class, 'export_pdf'])->name('admin.laporan-produksi.export_pdf');
         });
 
         // Laporan Distribusi (Admin)
