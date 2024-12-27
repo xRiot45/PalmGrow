@@ -113,10 +113,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script>
-    var colors = ["#ff6c2f", "#4ecac2"];
-
-    // Konfigurasi chart umum
-    const chartOptions = {
+    // Options Charts
+    const prepareColumnChartOptions = (months, totalTandan, totalBerat) => ({
       chart: {
         height: 396,
         type: 'bar',
@@ -139,21 +137,21 @@
         width: 0,
         colors: ['transparent']
       },
-      colors: colors,
+      colors: ['#ff6c2f', '#4ecac2'],
       series: [{
           name: 'Total Tandan',
-          data: []
+          data: totalTandan
         },
         {
           name: 'Total Berat',
-          data: []
-        }
+          data: totalBerat
+        },
       ],
       xaxis: {
-        categories: []
+        categories: months
       },
       legend: {
-        offsetY: 7,
+        offsetY: 7
       },
       yaxis: {
         title: {
@@ -175,54 +173,22 @@
       },
       tooltip: {
         y: {
-          formatter: function(val, {
-            seriesIndex
-          }) {
-            return seriesIndex === 0 ? val + " Tandan" : val + " Kg";
-          }
+          formatter: (val, {
+              seriesIndex
+            }) =>
+            seriesIndex === 0 ? `${val} Tandan` : `${val} Kg`
         }
       }
-    };
+    });
 
-    // Fungsi untuk mempersiapkan data produksi
-    const prepareChartData = (produksiData) => {
-      const bulanUrut = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
-        "September", "Oktober", "November", "Desember"
-      ];
-
-      const months = produksiData.map(item => item.month_name).sort((a, b) => bulanUrut.indexOf(a) -
-        bulanUrut.indexOf(b));
-      const totalTandan = produksiData.map(item => parseInt(item.total_tandan));
-      const totalBerat = produksiData.map(item => parseInt(item.total_berat));
-
-      return {
-        months,
-        totalTandan,
-        totalBerat
-      };
-    };
-
-    const produksiData = @json($totals['total_produksi_bulanan']);
-    const {
-      months,
-      totalTandan,
-      totalBerat
-    } = prepareChartData(produksiData);
-
-    // Update chart options
-    chartOptions.series[0].data = totalTandan;
-    chartOptions.series[1].data = totalBerat;
-    chartOptions.xaxis.categories = months;
-
-    // Render chart
-    new ApexCharts(document.querySelector("#chart-data-produksi"), chartOptions).render();
-
-    // Pie chart options
-    const pieChartOptions = {
+    const preparePieChartOptions = (labels, data, colors) => ({
       chart: {
         width: 380,
-        type: 'pie',
+        type: 'pie'
       },
+      labels,
+      series: data,
+      colors,
       responsive: [{
         breakpoint: 480,
         options: {
@@ -231,7 +197,7 @@
           },
           legend: {
             position: 'bottom'
-          }
+          },
         }
       }],
       legend: {
@@ -244,35 +210,72 @@
         enabled: true,
         style: {
           fontSize: '14px',
-          colors: ['#4e4b66'],
-        }
-      }
+          colors: ['#4e4b66']
+        },
+      },
+    });
+
+    // Data produksi Preprocessing 
+    const prepareChartDataProduksi = (produksiData) => {
+      const bulanUrut = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+        "September", "Oktober", "November", "Desember"
+      ];
+
+      const sortedData = [...produksiData].sort(
+        (a, b) => bulanUrut.indexOf(a.month_name) - bulanUrut.indexOf(b.month_name)
+      );
+
+      const months = sortedData.map(item => item.month_name);
+      const totalTandan = sortedData.map(item => parseInt(item.total_tandan, 10));
+      const totalBerat = sortedData.map(item => parseInt(item.total_berat, 10));
+
+      return {
+        months,
+        totalTandan,
+        totalBerat
+      };
     };
 
-    // Fungsi untuk membuat pie chart
-    function createPieChart(elementId, labels, data, colors) {
-      const chartOptions = {
-        ...pieChartOptions,
-        labels: labels,
-        series: data,
-        colors: colors,
-      };
+    const createColumnChart = (elementId, options) => {
+      new ApexCharts(document.querySelector(`#${elementId}`), options).render();
+    };
 
-      new ApexCharts(document.querySelector(`#${elementId}`), chartOptions).render();
-    }
+    const createPieChart = (elementId, labels, data, colors) => {
+      const options = preparePieChartOptions(labels, data, colors);
+      new ApexCharts(document.querySelector(`#${elementId}`), options).render();
+    };
 
-    // Event listener untuk rendering pie charts
-    document.addEventListener('DOMContentLoaded', function() {
+    // Main Logic
+    document.addEventListener('DOMContentLoaded', () => {
       const kebunData = @json($totals['total_kebun']);
       const pembayaranData = @json($totals['total_pembayaran']);
+      const produksiData = @json($totals['total_produksi_bulanan']);
 
-      // Create pie charts for kebun and pembayaran
-      createPieChart('chart-data-kebun', ['Aktif', 'Non Aktif'], [kebunData.aktif, kebunData
-        .non_aktif
-      ], ['#22c55e', '#ef5f5f']);
-      createPieChart('chart-data-pembayaran', ['Cash', 'Transfer'], [pembayaranData.cash,
-        pembayaranData.transfer
-      ], ['#1c84ee', '#22c55e']);
+
+      const {
+        months,
+        totalTandan,
+        totalBerat
+      } = prepareChartDataProduksi(produksiData);
+
+      // Render Column Chart
+      const columnChartOptions = prepareColumnChartOptions(months, totalTandan, totalBerat);
+      createColumnChart('chart-data-produksi', columnChartOptions);
+
+      // Render Pie Chart
+      createPieChart(
+        'chart-data-kebun',
+        ['Aktif', 'Non Aktif'],
+        [kebunData.aktif, kebunData.non_aktif],
+        ['#22c55e', '#ef5f5f']
+      );
+      createPieChart(
+        'chart-data-pembayaran',
+        ['Cash', 'Transfer'],
+        [pembayaranData.cash, pembayaranData.transfer],
+        ['#1c84ee', '#22c55e']
+      );
     });
   </script>
 @endsection
