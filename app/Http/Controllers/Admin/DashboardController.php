@@ -9,12 +9,29 @@ use App\Models\Laporan;
 use App\Models\Pembayaran;
 use App\Models\Pengguna;
 use App\Models\Produksi;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     public function index(): View
     {
+        $bulan = [
+            12 => 'Desember',
+            11 => 'November',
+            10 => 'Oktober',
+            9 => 'September',
+            8 => 'Agustus',
+            7 => 'Juli',
+            5 => 'Mei',
+            4 => 'April',
+            6 => 'Juni',
+            3 => 'Maret',
+            2 => 'Februari',
+            1 => 'Januari',
+        ];
+
         $totals = [
             'total_pengguna' => Pengguna::count(),
             'total_laporan_masuk' => Laporan::count(),
@@ -27,9 +44,42 @@ class DashboardController extends Controller
             'total_pembayaran' => [
                 'cash' => Pembayaran::where('metode_pembayaran', 'Cash')->count(),
                 'transfer' => Pembayaran::where('metode_pembayaran', 'Transfer')->count(),
-            ]
+            ],
+            'total_produksi_bulanan' => Produksi::selectRaw('
+                YEAR(tanggal_produksi) as year, 
+                MONTH(tanggal_produksi) as month, 
+                SUM(jumlah_tandan) as total_tandan, 
+                SUM(berat_total) as total_berat
+            ')
+                ->groupBy(DB::raw('YEAR(tanggal_produksi)'), DB::raw('MONTH(tanggal_produksi)'))
+                ->orderBy('year', 'desc')
+                ->orderBy('month', 'desc')
+                ->get()
+                ->map(function ($item) use ($bulan) {
+                    $item->month_name = $bulan[$item->month];
+                    return $item;
+                })
         ];
 
-        return view('pages.admin.dashboard.index', compact('totals'));
+        $bulanDenganData = collect([]);
+        foreach ($bulan as $monthNumber => $monthName) {
+            $found = $totals['total_produksi_bulanan']->firstWhere('month', $monthNumber);
+
+            if ($found) {
+                $bulanDenganData->push($found);
+            } else {
+                $bulanDenganData->push((object) [
+                    'year' => date('Y'),
+                    'month' => $monthNumber,
+                    'total_tandan' => 0,
+                    'total_berat' => 0,
+                    'month_name' => $monthName
+                ]);
+            }
+        }
+
+        $bulanDenganData = $bulanDenganData->sortBy('month');
+
+        return view('pages.admin.dashboard.index', compact('totals', 'bulanDenganData'));
     }
 }

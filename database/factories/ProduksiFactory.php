@@ -12,7 +12,7 @@ class ProduksiFactory extends Factory
     {
         static $usedKebunIds = [];
 
-        $startDate = '2024-12-01';
+        $startDate = '2024-01-01';
         $endDate = '2024-12-31';
 
         $tanggal_produksi = $this->faker->dateTimeBetween($startDate, $endDate)->format('Y-m-d');

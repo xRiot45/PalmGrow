@@ -82,7 +82,7 @@
         <div class="card-body">
           <h4 class="card-title mb-3 anchor fw-semibold" id="simple_pie">Data Kebun</h4>
           <div dir="ltr" class="d-flex justify-content-center">
-            <canvas id="simple-pie-data-kebun"></canvas>
+            <div id="chart-data-kebun"></div>
           </div>
         </div>
       </div>
@@ -92,63 +92,187 @@
         <div class="card-body">
           <h4 class="card-title mb-3 anchor fw-semibold" id="simple_pie">Data Pembayaran</h4>
           <div dir="ltr" class="d-flex justify-content-center">
-            <canvas id="simple-pie-data-pembayaran"></canvas>
+            <div id="chart-data-pembayaran"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const kebunData = @json($totals['total_kebun']);
-    const pembayaranData = @json($totals['total_pembayaran']);
+  <div>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title anchor fw-semibold" id="basic">Data Produksi</h4>
+        <div dir="ltr">
+          <div id="chart-data-produksi" class="apex-charts"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    // General chart options
-    const options = {
-      responsive: false,
-      plugins: {
-        legend: {
-          show: true,
-          position: 'bottom',
-          horizontalAlign: 'center',
-          verticalAlign: 'middle',
-          floating: false,
-          fontSize: '14px',
-          offsetX: 0,
-          offsetY: 7
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script>
+    var colors = ["#ff6c2f", "#4ecac2"];
+
+    // Konfigurasi chart umum
+    const chartOptions = {
+      chart: {
+        height: 396,
+        type: 'bar',
+        toolbar: {
+          show: false
         }
       },
-      layout: {
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          endingShape: 'rounded',
+          columnWidth: '55%',
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 0,
+        colors: ['transparent']
+      },
+      colors: colors,
+      series: [{
+          name: 'Total Tandan',
+          data: []
+        },
+        {
+          name: 'Total Berat',
+          data: []
+        }
+      ],
+      xaxis: {
+        categories: []
+      },
+      legend: {
+        offsetY: 7,
+      },
+      yaxis: {
+        title: {
+          text: 'Data Produksi'
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      grid: {
+        row: {
+          colors: ['transparent', 'transparent'],
+          opacity: 0.2
+        },
+        borderColor: '#f1f3fa',
         padding: {
-          top: 10,
-          bottom: 10,
+          bottom: 5
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: function(val, {
+            seriesIndex
+          }) {
+            return seriesIndex === 0 ? val + " Tandan" : val + " Kg";
+          }
         }
       }
     };
 
-    function createPieChart(elementId, labels, data, backgroundColors) {
-      const ctx = document.getElementById(elementId).getContext('2d');
-      const chartData = {
-        labels: labels,
-        datasets: [{
-          data: data,
-          backgroundColor: backgroundColors,
-          borderWidth: 5,
-        }]
+    // Fungsi untuk mempersiapkan data produksi
+    const prepareChartData = (produksiData) => {
+      const bulanUrut = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+        "September", "Oktober", "November", "Desember"
+      ];
+
+      const months = produksiData.map(item => item.month_name).sort((a, b) => bulanUrut.indexOf(a) -
+        bulanUrut.indexOf(b));
+      const totalTandan = produksiData.map(item => parseInt(item.total_tandan));
+      const totalBerat = produksiData.map(item => parseInt(item.total_berat));
+
+      return {
+        months,
+        totalTandan,
+        totalBerat
       };
-      new Chart(ctx, {
+    };
+
+    const produksiData = @json($totals['total_produksi_bulanan']);
+    const {
+      months,
+      totalTandan,
+      totalBerat
+    } = prepareChartData(produksiData);
+
+    // Update chart options
+    chartOptions.series[0].data = totalTandan;
+    chartOptions.series[1].data = totalBerat;
+    chartOptions.xaxis.categories = months;
+
+    // Render chart
+    new ApexCharts(document.querySelector("#chart-data-produksi"), chartOptions).render();
+
+    // Pie chart options
+    const pieChartOptions = {
+      chart: {
+        width: 380,
         type: 'pie',
-        data: chartData,
-        options: options,
-      });
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }],
+      legend: {
+        position: 'bottom',
+        horizontalAlign: 'center',
+        floating: false,
+        fontSize: '14px',
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontSize: '14px',
+          colors: ['#4e4b66'],
+        }
+      }
+    };
+
+    // Fungsi untuk membuat pie chart
+    function createPieChart(elementId, labels, data, colors) {
+      const chartOptions = {
+        ...pieChartOptions,
+        labels: labels,
+        series: data,
+        colors: colors,
+      };
+
+      new ApexCharts(document.querySelector(`#${elementId}`), chartOptions).render();
     }
 
-    createPieChart('simple-pie-data-kebun', ['Aktif', 'Non Aktif'], [kebunData.aktif, kebunData
-      .non_aktif
-    ], ['#22c55e', '#ef5f5f']);
-    createPieChart('simple-pie-data-pembayaran', ['Cash', 'Transfer'], [pembayaranData.cash,
-      pembayaranData.transfer
-    ], ['#1c84ee', '#22c55e']);
+    // Event listener untuk rendering pie charts
+    document.addEventListener('DOMContentLoaded', function() {
+      const kebunData = @json($totals['total_kebun']);
+      const pembayaranData = @json($totals['total_pembayaran']);
+
+      // Create pie charts for kebun and pembayaran
+      createPieChart('chart-data-kebun', ['Aktif', 'Non Aktif'], [kebunData.aktif, kebunData
+        .non_aktif
+      ], ['#22c55e', '#ef5f5f']);
+      createPieChart('chart-data-pembayaran', ['Cash', 'Transfer'], [pembayaranData.cash,
+        pembayaranData.transfer
+      ], ['#1c84ee', '#22c55e']);
+    });
   </script>
 @endsection
