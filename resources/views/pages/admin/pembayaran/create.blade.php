@@ -11,8 +11,10 @@
           aria-label="Pilih Lokasi Kebun Produksi" data-choices data-choices-search-true
           data-choices-removeItem>
           <option value="">-- Pilih Lokasi Kebun Produksi --</option>
-          @foreach ($produksi as $lokasi)
-            <option value="{{ $lokasi->id }}">{{ $lokasi->kebun->lokasi }}</option>
+          @foreach ($produksi as $item)
+            @if ($item->kebun)
+              <option value="{{ $item->id }}">{{ $item->kebun->lokasi }}</option>
+            @endif
           @endforeach
         </select>
         @error('produksi_id')

@@ -5,23 +5,27 @@ namespace Database\Factories;
 use App\Models\Kebun;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Produksi>
- */
+
 class ProduksiFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        static $usedKebunIds = [];
+
+        $startDate = '2024-12-01';
+        $endDate = '2024-12-31';
+
+        $tanggal_produksi = $this->faker->dateTimeBetween($startDate, $endDate)->format('Y-m-d');
+        $availableKebunIds = Kebun::pluck('id')->diff($usedKebunIds)->toArray();
+        $kebun_id = $this->faker->randomElement($availableKebunIds);
+
+        $usedKebunIds[] = $kebun_id;
+
         return [
-            'kebun_id' => Kebun::inRandomOrder()->first()->id,
+            'kebun_id' => $kebun_id,
             'jumlah_tandan' => $this->faker->randomNumber(2),
             'berat_total' => $this->faker->randomFloat(2, 0, 100),
-            'tanggal_produksi' => $this->faker->date('Y-m-d', 'now')
+            'tanggal_produksi' => $tanggal_produksi
         ];
     }
 }

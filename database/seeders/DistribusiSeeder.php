@@ -13,6 +13,6 @@ class DistribusiSeeder extends Seeder
      */
     public function run(): void
     {
-        Distribusi::factory(10)->create();
+        Distribusi::factory(100)->create();
     }
 }

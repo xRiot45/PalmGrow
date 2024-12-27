@@ -9,19 +9,21 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class KebunFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $startDate = '2024-12-01';
+        $endDateForTanam = '2024-12-31';
+        $startDateForPanen = '2025-01-01';
+        $endDateForPanen = '2025-12-31';
+
+        $tanggalTanam = $this->faker->dateTimeBetween($startDate, $endDateForTanam)->format('Y-m-d');
+
         return [
-            'lokasi' => $this->faker->city, // ganti 'lokasi' dengan format yang valid seperti 'city'
+            'lokasi' => $this->faker->city,
             'luas' => $this->faker->randomFloat(2, 10, 1000),
             'status' => $this->faker->randomElement(['Aktif', 'Non-Aktif']),
-            'tanggal_tanam' => $this->faker->date('Y-m-d', 'now'),
-            'tanggal_panen' => $this->faker->date('Y-m-d', 'now')
+            'tanggal_tanam' => $tanggalTanam,
+            'tanggal_panen' => $this->faker->dateTimeBetween($startDateForPanen, $endDateForPanen)->format('Y-m-d'),
         ];
     }
 }

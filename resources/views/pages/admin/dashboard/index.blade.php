@@ -96,7 +96,7 @@
       labels: ["Aktif", "Non Aktif"],
       datasets: [{
         data: [kebunData.aktif, kebunData.non_aktif],
-        backgroundColor: ["#0b5ed7", "#dc3545"],
+        backgroundColor: ["#198754", "#dc3545"],
         borderWidth: 5,
       }]
     };

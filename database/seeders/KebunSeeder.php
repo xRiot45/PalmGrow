@@ -13,6 +13,6 @@ class KebunSeeder extends Seeder
      */
     public function run(): void
     {
-        Kebun::factory(20)->create();
+        Kebun::factory(100)->create();
     }
 }

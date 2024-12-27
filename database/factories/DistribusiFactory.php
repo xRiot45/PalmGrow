@@ -2,26 +2,31 @@
 
 namespace Database\Factories;
 
+use App\Models\Kebun;
 use App\Models\Produksi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Distribusi>
- */
+
 class DistribusiFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        static $usedProduksiIds = [];
+
+        $startDate = '2025-01-01';
+        $endDate = '2025-12-31';
+
+        $tanggal_distribusi = $this->faker->dateTimeBetween($startDate, $endDate);
+        $availableProduksiIds = Produksi::pluck('id')->diff($usedProduksiIds)->toArray();
+        $produksi_id = $this->faker->randomElement($availableProduksiIds);
+
+        $usedProduksiIds[] = $produksi_id;
+
         return [
-            'produksi_id' => Produksi::inRandomOrder()->first()->id,
+            'produksi_id' => $produksi_id,
             'tujuan' => $this->faker->city(),
             'jumlah' => $this->faker->randomNumber(2),
-            'tanggal_distribusi' => $this->faker->date('Y-m-d', 'now'),
+            'tanggal_distribusi' => $tanggal_distribusi
         ];
     }
 }
