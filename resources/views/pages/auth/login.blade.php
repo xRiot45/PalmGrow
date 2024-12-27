@@ -33,7 +33,7 @@
                     <div class="mb-3">
                       <label class="form-label" for="email">Email</label>
                       <input type="email" id="email" name="email" class="form-control"
-                        placeholder="Masukkan alamat email anda">
+                        placeholder="Masukkan alamat email anda" value="admin@gmail.com">
                       @error('email')
                         <div class="text-danger">{{ $message }}</div>
                       @enderror
@@ -44,7 +44,7 @@
                     <div class="mb-3">
                       <label class="form-label" for="password">Password</label>
                       <input type="password" id="password" name="password" class="form-control"
-                        placeholder="Masukkan kata sandi anda">
+                        placeholder="Masukkan kata sandi anda" value="password">
                       @error('password')
                         <div class="text-danger">{{ $message }}</div>
                       @enderror
