@@ -110,11 +110,22 @@
     </div>
   </div>
 
+  <div>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title anchor fw-semibold" id="basic">Data Distribusi</h4>
+        <div dir="ltr">
+          <div id="chart-data-distribusi" class="apex-charts"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script>
     // Options Charts
-    const prepareColumnChartOptions = (months, totalTandan, totalBerat) => ({
+    const prepareColumnChartProduksiOptions = (months, totalTandan, totalBerat) => ({
       chart: {
         height: 396,
         type: 'bar',
@@ -181,6 +192,67 @@
       }
     });
 
+    const prepareColumnChartDistribusiOptions = (months, totalDistribusi) => ({
+      chart: {
+        height: 396,
+        type: 'bar',
+        toolbar: {
+          show: false
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          endingShape: 'rounded',
+          columnWidth: '55%',
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 0,
+        colors: ['transparent']
+      },
+      colors: ['#1c84ee'],
+      series: [{
+        name: 'Total Distribusi',
+        data: totalDistribusi
+      }, ],
+      xaxis: {
+        categories: months
+      },
+      legend: {
+        offsetY: 7
+      },
+      yaxis: {
+        title: {
+          text: 'Data Distribusi'
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      grid: {
+        row: {
+          colors: ['transparent', 'transparent'],
+          opacity: 0.2
+        },
+        borderColor: '#f1f3fa',
+        padding: {
+          bottom: 5
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: (val, {
+            seriesIndex
+          }) => `${val} Distribusi`
+        }
+      }
+    })
+
     const preparePieChartOptions = (labels, data, colors) => ({
       chart: {
         width: 380,
@@ -237,6 +309,27 @@
       };
     };
 
+    // Data Distribusi Preprocessing
+    const prepareChartDataDistribusi = (distribusiData) => {
+      console.log(distribusiData)
+      const bulanUrut = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+        "September", "Oktober", "November", "Desember"
+      ];
+
+      const sortedData = [...distribusiData].sort(
+        (a, b) => bulanUrut.indexOf(a.month_name) - bulanUrut.indexOf(b.month_name)
+      )
+
+      const months = sortedData.map(item => item.month_name);
+      const totalDistribusi = sortedData.map(item => parseInt(item.jumlah_distribusi, 10));
+
+      return {
+        months,
+        totalDistribusi
+      }
+    }
+
     const createColumnChart = (elementId, options) => {
       new ApexCharts(document.querySelector(`#${elementId}`), options).render();
     };
@@ -251,7 +344,7 @@
       const kebunData = @json($totals['total_kebun']);
       const pembayaranData = @json($totals['total_pembayaran']);
       const produksiData = @json($totals['total_produksi_bulanan']);
-
+      const distribusiData = @json($totals['total_distribusi_bulanan']);
 
       const {
         months,
@@ -259,9 +352,21 @@
         totalBerat
       } = prepareChartDataProduksi(produksiData);
 
+      const {
+        months: monthsDistribusi,
+        totalDistribusi
+      } = prepareChartDataDistribusi(distribusiData);
+
       // Render Column Chart
-      const columnChartOptions = prepareColumnChartOptions(months, totalTandan, totalBerat);
-      createColumnChart('chart-data-produksi', columnChartOptions);
+      const columnChartProduksiOptions = prepareColumnChartProduksiOptions(months, totalTandan,
+        totalBerat);
+
+      const columnChartDistribusiOptions = prepareColumnChartDistribusiOptions(monthsDistribusi,
+        totalDistribusi);
+
+
+      createColumnChart('chart-data-produksi', columnChartProduksiOptions);
+      createColumnChart('chart-data-distribusi', columnChartDistribusiOptions);
 
       // Render Pie Chart
       createPieChart(

@@ -9,7 +9,6 @@ use App\Models\Laporan;
 use App\Models\Pembayaran;
 use App\Models\Pengguna;
 use App\Models\Produksi;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -45,12 +44,14 @@ class DashboardController extends Controller
                 'cash' => Pembayaran::where('metode_pembayaran', 'Cash')->count(),
                 'transfer' => Pembayaran::where('metode_pembayaran', 'Transfer')->count(),
             ],
-            'total_produksi_bulanan' => Produksi::selectRaw('
-                YEAR(tanggal_produksi) as year, 
-                MONTH(tanggal_produksi) as month, 
-                SUM(jumlah_tandan) as total_tandan, 
+            'total_produksi_bulanan' => Produksi::selectRaw(
+                '
+                YEAR(tanggal_produksi) as year,
+                MONTH(tanggal_produksi) as month,
+                SUM(jumlah_tandan) as total_tandan,
                 SUM(berat_total) as total_berat
-            ')
+            ',
+            )
                 ->groupBy(DB::raw('YEAR(tanggal_produksi)'), DB::raw('MONTH(tanggal_produksi)'))
                 ->orderBy('year', 'desc')
                 ->orderBy('month', 'desc')
@@ -58,23 +59,44 @@ class DashboardController extends Controller
                 ->map(function ($item) use ($bulan) {
                     $item->month_name = $bulan[$item->month];
                     return $item;
-                })
+                }),
+            'total_distribusi_bulanan' => Distribusi::selectRaw(
+                '
+                    YEAR(tanggal_distribusi) as year,
+                    MONTH(tanggal_distribusi) as month,
+                    SUM(jumlah) as jumlah_distribusi
+                    ',
+            )
+
+                ->groupBy(DB::raw('YEAR(tanggal_distribusi)'), DB::raw('MONTH(tanggal_distribusi)'))
+                ->orderBy('year', 'desc')
+                ->orderBy('month', 'desc')
+                ->get()
+                ->map(function ($item) use ($bulan) {
+                    $item->month_name = $bulan[$item->month];
+                    return $item;
+                }),
         ];
 
         $bulanDenganData = collect([]);
         foreach ($bulan as $monthNumber => $monthName) {
-            $found = $totals['total_produksi_bulanan']->firstWhere('month', $monthNumber);
+            $total_produksi = $totals['total_produksi_bulanan']->firstWhere('month', $monthNumber);
+            $total_distribusi = $totals['total_distribusi_bulanan']->firstWhere('month', $monthNumber);
 
-            if ($found) {
-                $bulanDenganData->push($found);
+            if ($total_produksi) {
+                $bulanDenganData->push($total_produksi);
+            } elseif ($total_distribusi) {
+                $bulanDenganData->push($total_distribusi);
             } else {
-                $bulanDenganData->push((object) [
-                    'year' => date('Y'),
-                    'month' => $monthNumber,
-                    'total_tandan' => 0,
-                    'total_berat' => 0,
-                    'month_name' => $monthName
-                ]);
+                $bulanDenganData->push(
+                    (object) [
+                        'year' => date('Y'),
+                        'month' => $monthNumber,
+                        'total_tandan' => 0,
+                        'total_berat' => 0,
+                        'month_name' => $monthName,
+                    ],
+                );
             }
         }
 

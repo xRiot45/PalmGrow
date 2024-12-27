@@ -13,8 +13,8 @@ class DistribusiFactory extends Factory
     {
         static $usedProduksiIds = [];
 
-        $startDate = '2025-01-01';
-        $endDate = '2025-12-31';
+        $startDate = '2024-01-01';
+        $endDate = '2024-12-31';
 
         $tanggal_distribusi = $this->faker->dateTimeBetween($startDate, $endDate);
         $availableProduksiIds = Produksi::pluck('id')->diff($usedProduksiIds)->toArray();
