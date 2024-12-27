@@ -76,12 +76,24 @@
     </div>
   </div>
 
-  <div class="row ">
-    <div class="card col-lg-3">
-      <div class="card-body">
-        <h4 class="card-title mb-3 anchor" id="simple_pie">Data Kebun</h4>
-        <div dir="ltr">
-          <canvas id="simple-pie"></canvas>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card ">
+        <div class="card-body">
+          <h4 class="card-title mb-3 anchor fw-semibold" id="simple_pie">Data Kebun</h4>
+          <div dir="ltr" class="d-flex justify-content-center">
+            <canvas id="simple-pie-data-kebun"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card ">
+        <div class="card-body">
+          <h4 class="card-title mb-3 anchor fw-semibold" id="simple_pie">Data Pembayaran</h4>
+          <div dir="ltr" class="d-flex justify-content-center">
+            <canvas id="simple-pie-data-pembayaran"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -90,17 +102,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const kebunData = @json($totals['total_kebun']);
-    const ctx = document.getElementById('simple-pie').getContext('2d');
+    const pembayaranData = @json($totals['total_pembayaran']);
 
-    const data = {
-      labels: ["Aktif", "Non Aktif"],
-      datasets: [{
-        data: [kebunData.aktif, kebunData.non_aktif],
-        backgroundColor: ["#198754", "#dc3545"],
-        borderWidth: 5,
-      }]
-    };
-
+    // General chart options
     const options = {
       responsive: false,
       plugins: {
@@ -123,10 +127,28 @@
       }
     };
 
-    new Chart(ctx, {
-      type: 'pie',
-      data: data,
-      options: options,
-    });
+    function createPieChart(elementId, labels, data, backgroundColors) {
+      const ctx = document.getElementById(elementId).getContext('2d');
+      const chartData = {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: backgroundColors,
+          borderWidth: 5,
+        }]
+      };
+      new Chart(ctx, {
+        type: 'pie',
+        data: chartData,
+        options: options,
+      });
+    }
+
+    createPieChart('simple-pie-data-kebun', ['Aktif', 'Non Aktif'], [kebunData.aktif, kebunData
+      .non_aktif
+    ], ['#22c55e', '#ef5f5f']);
+    createPieChart('simple-pie-data-pembayaran', ['Cash', 'Transfer'], [pembayaranData.cash,
+      pembayaranData.transfer
+    ], ['#1c84ee', '#22c55e']);
   </script>
 @endsection
