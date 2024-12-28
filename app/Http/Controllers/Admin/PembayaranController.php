@@ -62,13 +62,12 @@ class PembayaranController extends Controller
             'produksi' => $produksi,
         ]);
     }
-
     public function store(PembayaranRequest $request): RedirectResponse
     {
         if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
             $file = $request->file('bukti_pembayaran');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/pembayaran', $filename);
+            $file->storeAs('public', $filename);
         } else {
             return redirect()->back()->with('error', 'File tidak ditemukan atau tidak valid');
         }
@@ -78,7 +77,7 @@ class PembayaranController extends Controller
             'jumlah_pembayaran' => $request->jumlah_pembayaran,
             'tanggal_pembayaran' => $request->tanggal_pembayaran,
             'metode_pembayaran' => $request->metode_pembayaran,
-            'bukti_pembayaran' => 'public/pembayaran/' . $filename,
+            'bukti_pembayaran' => $filename,
         ]);
 
         if ($tambah_data) {
@@ -101,19 +100,21 @@ class PembayaranController extends Controller
     public function update(PembayaranRequest $request, int $id): RedirectResponse
     {
         $data = Pembayaran::findOrFail($id);
+
         if ($request->hasFile('bukti_pembayaran')) {
-            if ($data->bukti_pembayaran && Storage::exists('public/pembayaran/' . basename($data->bukti_pembayaran))) {
-                Storage::delete('public/pembayaran/' . basename($data->bukti_pembayaran));
+            if ($data->bukti_pembayaran && Storage::exists('public/' . $data->bukti_pembayaran)) {
+                Storage::delete('public/' . $data->bukti_pembayaran);
             }
 
             $file = $request->file('bukti_pembayaran');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $buktiPembayaran = $file->storeAs('public/pembayaran', $filename);
+            $file->storeAs('public', $filename);
 
-            $data->bukti_pembayaran = $buktiPembayaran;
+            $data->bukti_pembayaran = $filename;
         }
 
         $update_data = $data->update($request->except('bukti_pembayaran'));
+
         if ($update_data) {
             return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil diupdate');
         }
@@ -124,24 +125,21 @@ class PembayaranController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $pembayaran = Pembayaran::find($id);
-        if ($pembayaran) {
-            $bukti_pembayaran = $pembayaran->bukti_pembayaran;
-
-            if (Storage::exists($bukti_pembayaran)) {
-                Storage::delete($bukti_pembayaran);
-            }
-
-            $hapus_data = $pembayaran->delete();
-            if ($hapus_data) {
-                return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil dihapus');
-            }
-
-            return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran gagal dihapus');
+        if (!$pembayaran) {
+            return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran tidak ditemukan');
         }
 
-        return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran tidak ditemukan');
-    }
+        $bukti_pembayaran = 'public/' . $pembayaran->bukti_pembayaran;
+        if (Storage::exists($bukti_pembayaran)) {
+            Storage::delete($bukti_pembayaran);
+        }
 
+        if ($pembayaran->delete()) {
+            return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil dihapus');
+        }
+
+        return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran gagal dihapus');
+    }
 
     public function download_file(int $id): BinaryFileResponse
     {

@@ -78,7 +78,7 @@
     @if (isset($data->bukti_pembayaran))
       <div class="mt-4">
         <p class="fw-bold">File yang diunggah sebelumnya:</p>
-        <img src="{{ asset('storage/pembayaran/' . basename($data->bukti_pembayaran)) }}"
+        <img src="{{ asset('storage/' . basename($data->bukti_pembayaran)) }}"
           alt="Bukti Pembayaran" class="img-fluid w-25" />
       </div>
     @endif

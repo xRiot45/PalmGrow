@@ -290,8 +290,12 @@
                           <div class="modal-body">
                             <div class="text-center">
                               <img
-                                src="{{ $pembayaran->bukti_pembayaran ? asset('storage/pembayaran/' . basename($pembayaran->bukti_pembayaran)) : asset('images/404-error.png') }}"
+                                src="{{ $pembayaran->bukti_pembayaran ? asset('storage/' . $pembayaran->bukti_pembayaran) : asset('images/404-error.png') }}"
                                 alt="Not Found Img" class="w-100 h-100">
+
+                              <p>Debug
+                                {{ $pembayaran->bukti_pembayaran ? asset('storage/' . $pembayaran->bukti_pembayaran) : asset('images/404-error.png') }}
+                              </p>
                             </div>
 
                             <div class="w-100 d-flex gap-2 justify-content-center mt-3">
