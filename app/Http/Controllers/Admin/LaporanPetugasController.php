@@ -68,8 +68,8 @@ class LaporanPetugasController extends Controller
             ->showBackground()
             ->margins(0, 4, 0, 4)
             ->format('A4')
-            ->save(storage_path('/app/public/laporan/laporan-petugas.pdf'));
+            ->save(storage_path('/app/public/laporan-petugas.pdf'));
 
-        return response()->file(storage_path('/app/public/laporan/laporan-petugas.pdf'));
+        return response()->file(storage_path('/app/public/laporan-petugas.pdf'));
     }
 }

@@ -63,8 +63,8 @@ class LaporanPenggunaController extends Controller
             ->showBackground()
             ->margins(0, 4, 0, 4)
             ->format('A4')
-            ->save(storage_path('/app/public/laporan/laporan-pengguna.pdf'));
+            ->save(storage_path('/app/public/laporan-pengguna.pdf'));
 
-        return response()->file(storage_path('/app/public/laporan/laporan-pengguna.pdf'));
+        return response()->file(storage_path('/app/public/laporan-pengguna.pdf'));
     }
 }

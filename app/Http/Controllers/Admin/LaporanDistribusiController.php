@@ -76,8 +76,8 @@ class LaporanDistribusiController extends Controller
             ->showBackground()
             ->margins(0, 4, 0, 4)
             ->format('A4')
-            ->save(storage_path('/app/public/laporan/laporan-distribusi.pdf'));
+            ->save(storage_path('/app/public/laporan-distribusi.pdf'));
 
-        return response()->file(storage_path('/app/public/laporan/laporan-distribusi.pdf'));
+        return response()->file(storage_path('/app/public/laporan-distribusi.pdf'));
     }
 }

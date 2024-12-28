@@ -78,8 +78,8 @@ class LaporanPembayaranController extends Controller
             ->margins(0, 4, 0, 4)
             ->format('A4')
             ->landscape()
-            ->save(storage_path('/app/public/laporan/laporan-pembayaran.pdf'));
+            ->save(storage_path('/app/public/laporan-pembayaran.pdf'));
 
-        return response()->file(storage_path('/app/public/laporan/laporan-pembayaran.pdf'));
+        return response()->file(storage_path('/app/public/laporan-pembayaran.pdf'));
     }
 }

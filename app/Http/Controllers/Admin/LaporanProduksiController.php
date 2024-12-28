@@ -83,8 +83,8 @@ class LaporanProduksiController extends Controller
             ->showBackground()
             ->margins(0, 4, 0, 4)
             ->format('A4')
-            ->save(storage_path('/app/public/laporan/laporan-produksi.pdf'));
+            ->save(storage_path('/app/public/laporan-produksi.pdf'));
 
-        return response()->file(storage_path('/app/public/laporan/laporan-produksi.pdf'));
+        return response()->file(storage_path('/app/public/laporan-produksi.pdf'));
     }
 }
