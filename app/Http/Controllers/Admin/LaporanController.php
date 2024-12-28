@@ -62,7 +62,7 @@ class LaporanController extends Controller
         if ($request->hasFile('file_path') && $request->file('file_path')->isValid()) {
             $file = $request->file('file_path');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/laporan-kebun', $filename);
+            $file->storeAs('public', $filename);
         } else {
             return redirect()->back()->with('error', 'File tidak ditemukan atau tidak valid');
         }
@@ -70,7 +70,7 @@ class LaporanController extends Controller
         $tambah_data = Laporan::create([
             'kebun_id' => $request->kebun_id,
             'file_type' => $filename,
-            'file_path' => 'public/laporan-kebun/' . $filename,
+            'file_path' =>  $filename,
             'tanggal_laporan' => $request->tanggal_laporan,
         ]);
 
@@ -96,13 +96,13 @@ class LaporanController extends Controller
     {
         $data = Laporan::findOrFail($id);
         if ($request->hasFile('file_path')) {
-            if ($data->file_path && Storage::exists('public/laporan-kebun/' . basename($data->file_path))) {
-                Storage::delete('public/laporan-kebun/' . basename($data->file_path));
+            if ($data->file_path && Storage::exists('public/' . basename($data->file_path))) {
+                Storage::delete('public/' . basename($data->file_path));
             }
 
             $file = $request->file('file_path');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('public/laporan-kebun', $filename);
+            $filePath = $file->storeAs('public', $filename);
 
             $data->file_path = $filePath;
         }
@@ -119,21 +119,20 @@ class LaporanController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $laporan = Laporan::find($id);
-        if ($laporan) {
-            $file_path = $laporan->file_path;
-            if (Storage::exists($file_path)) {
-                Storage::delete($file_path);
-            }
-
-            $hapus_data = $laporan->delete();
-            if ($hapus_data) {
-                return redirect()->route('admin.laporan.index')->with('success', 'Laporan beserta file berhasil dihapus');
-            }
-
-            return redirect()->route('admin.laporan.index')->with('error', 'Laporan beserta file gagal dihapus');
+        if (!$laporan) {
+            return redirect()->route('admin.laporan.index')->with('error', 'Laporan tidak ditemukan');
         }
 
-        return redirect()->route('admin.laporan.index')->with('error', 'Laporan tidak ditemukan');
+        $file_laporan = 'public/' . $laporan->file_path;
+        if (Storage::exists($file_laporan)) {
+            Storage::delete($file_laporan);
+        }
+
+        if ($laporan->delete()) {
+            return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil dihapus');
+        }
+
+        return redirect()->route('admin.Laporan.index')->with('error', 'Laporan gagal dihapus');
     }
 
     public function view_pdf($id): View
@@ -143,8 +142,8 @@ class LaporanController extends Controller
             abort(404, 'Laporan tidak ditemukan');
         }
 
-        $pdfPath = storage_path('app/' . $bukti_laporan->file_path);
-        if (!file_exists($pdfPath)) {
+        $pdfPath = 'storage/' . $bukti_laporan->file_path;
+        if (!file_exists(public_path($pdfPath))) {
             abort(404, 'File PDF tidak ditemukan');
         }
 
@@ -157,7 +156,12 @@ class LaporanController extends Controller
     public function download_pdf($id): BinaryFileResponse
     {
         $laporan = Laporan::find($id);
-        $pdfPath = storage_path('app/' . $laporan->file_path);
+        $pdfPath = 'storage/' . $laporan->file_path;
+
+        if (!file_exists(public_path($pdfPath))) {
+            abort(404, 'File PDF tidak ditemukan');
+        }
+
         return response()->download($pdfPath);
     }
 }
