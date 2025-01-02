@@ -1,9 +1,5 @@
 @extends('layouts.petugas/app', ['title' => 'Tambah Laporan'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
 @section('content')
   <form method="POST" action="{{ route('petugas.laporan.store') }}" enctype="multipart/form-data">
     @csrf

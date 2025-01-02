@@ -1,9 +1,5 @@
 @extends('layouts.petugas/app', ['title' => 'Laporan'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
 @section('content')
   <div class="row">
     <div class="col-xl-12">

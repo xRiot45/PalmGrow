@@ -1,9 +1,5 @@
 @extends('layouts.petugas/app', ['title' => 'Edit Laporan'])
 
-@section('css')
-  @vite(['node_modules/choices.js/public/assets/styles/choices.min.css'])
-@endsection
-
 @section('content')
   <form method="POST" action="{{ route('petugas.laporan.update', $data->id) }}"
     enctype="multipart/form-data">
@@ -50,8 +46,8 @@
     @if (isset($data->file_path))
       <div class="mt-4">
         <p class="fw-bold">File yang diunggah sebelumnya:</p>
-        <embed src="{{ asset('storage/laporan/' . basename($data->file_path)) }}"
-          type="application/pdf" width="100%" height="800px">
+        <embed src="{{ asset('storage/' . basename($data->file_path)) }}" type="application/pdf"
+          width="100%" height="800px">
       </div>
     @endif
 
